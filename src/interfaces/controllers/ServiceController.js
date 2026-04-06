@@ -1,46 +1,75 @@
-import { AddService, EditService, DeleteService, GetAllServices } from '../../application/use-cases/ServiceUseCases.js';
-import { MongooseServiceRepository } from '../../infrastructure/repositories/MongooseRepositories.js';
+import { STATUS_CODES } from '../constants/statusCodes.js';
 
-const serviceRepository = new MongooseServiceRepository();
-
-const addService = async (req, res) => {
-  try {
-    const addServiceUseCase = new AddService(serviceRepository);
-    const service = await addServiceUseCase.execute(req.body);
-    res.status(201).json(service);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+/**
+ * Controller for managing services.
+ */
+class ServiceController {
+  constructor(addServiceUseCase, editServiceUseCase, deleteServiceUseCase, getAllServicesUseCase) {
+    this.addServiceUseCase = addServiceUseCase;
+    this.editServiceUseCase = editServiceUseCase;
+    this.deleteServiceUseCase = deleteServiceUseCase;
+    this.getAllServicesUseCase = getAllServicesUseCase;
   }
-};
 
-const editService = async (req, res) => {
-  try {
-    const editServiceUseCase = new EditService(serviceRepository);
-    const service = await editServiceUseCase.execute(req.params.id, req.body);
-    res.json(service);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  /**
+   * Adds a new service to the platform.
+   * 
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
+  async addService(req, res) {
+    try {
+      const service = await this.addServiceUseCase.execute(req.body);
+      res.status(STATUS_CODES.CREATED).json(service);
+    } catch (error) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({ error: error.message });
+    }
   }
-};
 
-const deleteService = async (req, res) => {
-  try {
-    const deleteServiceUseCase = new DeleteService(serviceRepository);
-    await deleteServiceUseCase.execute(req.params.id);
-    res.json({ message: 'Service deleted successfully' });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  /**
+   * Updates an existing service.
+   * 
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
+  async editService(req, res) {
+    try {
+      const service = await this.editServiceUseCase.execute(req.params.id, req.body);
+      res.json(service);
+    } catch (error) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({ error: error.message });
+    }
   }
-};
 
-const getAllServices = async (req, res) => {
-  try {
-    const getAllServicesUseCase = new GetAllServices(serviceRepository);
-    const services = await getAllServicesUseCase.execute(req.query);
-    res.json(services);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  /**
+   * Deletes a service from the platform.
+   * 
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
+  async deleteService(req, res) {
+    try {
+      await this.deleteServiceUseCase.execute(req.params.id);
+      res.json({ message: 'Service deleted successfully' });
+    } catch (error) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({ error: error.message });
+    }
   }
-};
 
-export { addService, editService, deleteService, getAllServices };
+  /**
+   * Retrieves all services, with optional filtering.
+   * 
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
+  async getAllServices(req, res) {
+    try {
+      const services = await this.getAllServicesUseCase.execute(req.query);
+      res.json(services);
+    } catch (error) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({ error: error.message });
+    }
+  }
+}
+
+export { ServiceController };

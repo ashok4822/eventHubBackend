@@ -1,37 +1,59 @@
-import { BookService, GetUserBookings, GetAdminBookings } from '../../application/use-cases/BookingUseCases.js';
-import { MongooseBookingRepository, MongooseServiceRepository } from '../../infrastructure/repositories/MongooseRepositories.js';
+import { STATUS_CODES } from '../constants/statusCodes.js';
 
-const bookingRepository = new MongooseBookingRepository();
-const serviceRepository = new MongooseServiceRepository();
-
-const book = async (req, res) => {
-  try {
-    const bookUseCase = new BookService(bookingRepository, serviceRepository);
-    const booking = await bookUseCase.execute({ ...req.body, userId: req.user.id });
-    res.status(201).json(booking);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+/**
+ * Controller for managing service bookings.
+ */
+class BookingController {
+  constructor(bookServiceUseCase, getUserBookingsUseCase, getAdminBookingsUseCase) {
+    this.bookServiceUseCase = bookServiceUseCase;
+    this.getUserBookingsUseCase = getUserBookingsUseCase;
+    this.getAdminBookingsUseCase = getAdminBookingsUseCase;
   }
-};
 
-const getUserBookings = async (req, res) => {
-  try {
-    const getUserBookingsUseCase = new GetUserBookings(bookingRepository);
-    const bookings = await getUserBookingsUseCase.execute(req.user.id);
-    res.json(bookings);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  /**
+   * Creates a new booking for a service.
+   * 
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
+  async book(req, res) {
+    try {
+      const booking = await this.bookServiceUseCase.execute({ ...req.body, userId: req.user.id });
+      res.status(STATUS_CODES.CREATED).json(booking);
+    } catch (error) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({ error: error.message });
+    }
   }
-};
 
-const getAllBookings = async (req, res) => {
-  try {
-    const getAllBookingsUseCase = new GetAdminBookings(bookingRepository);
-    const bookings = await getAllBookingsUseCase.execute();
-    res.json(bookings);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  /**
+   * Retrieves all bookings for the authenticated user.
+   * 
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
+  async getUserBookings(req, res) {
+    try {
+      const bookings = await this.getUserBookingsUseCase.execute(req.user.id);
+      res.json(bookings);
+    } catch (error) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({ error: error.message });
+    }
   }
-};
 
-export { book, getUserBookings, getAllBookings };
+  /**
+   * Retrieves all bookings across the platform (Admin only).
+   * 
+   * @param {Object} req - Express request object.
+   * @param {Object} res - Express response object.
+   */
+  async getAllBookings(req, res) {
+    try {
+      const bookings = await this.getAdminBookingsUseCase.execute();
+      res.json(bookings);
+    } catch (error) {
+      res.status(STATUS_CODES.BAD_REQUEST).json({ error: error.message });
+    }
+  }
+}
+
+export { BookingController };
