@@ -16,7 +16,7 @@ export const loginRules = [
 
 export const serviceRules = [
   body('title').trim().notEmpty().withMessage('Title is required').isLength({ min: 3 }).withMessage('Title must be at least 3 characters'),
-  body('category').isIn(['venue', 'hotel', 'caterer', 'cameraman', 'DJ']).withMessage('Invalid category'),
+  body('category').isIn(['venue', 'hotel', 'caterer', 'cameraman', 'DJ', 'other']).withMessage('Invalid category'),
   body('pricePerDay').isNumeric().withMessage('Price must be a number').custom(value => value > 0).withMessage('Price must be positive'),
   body('description').trim().notEmpty().withMessage('Description is required').isLength({ min: 10 }).withMessage('Description must be at least 10 characters'),
   body('location').trim().notEmpty().withMessage('Location is required'),
