@@ -12,6 +12,9 @@ dotenv.config();
 
 const app = express();
 
+// Trust proxy (required for Render/Vercel rate limiting)
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(helmet({
   contentSecurityPolicy: {
@@ -24,17 +27,15 @@ app.use(helmet({
 }));
 
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-// Ensure origin doesn't fail due to a trailing slash mismatch
 const allowedOrigins = [
   frontendUrl,
-  frontendUrl.endsWith('/') ? frontendUrl.slice(0, -1) : frontendUrl + '/'
+  frontendUrl.replace(/\/$/, ""), // Remove slash if exists
+  frontendUrl.replace(/\/$/, "") + "/" // Add slash if not exists
 ];
 
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin) || allowedOrigins.includes(origin + '/')) {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
