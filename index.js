@@ -23,11 +23,27 @@ app.use(helmet({
   },
 }));
 
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+// Ensure origin doesn't fail due to a trailing slash mismatch
+const allowedOrigins = [
+  frontendUrl,
+  frontendUrl.endsWith('/') ? frontendUrl.slice(0, -1) : frontendUrl + '/'
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || allowedOrigins.includes(origin + '/')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Set-Cookie']
 }));
 
 app.use(express.json());
