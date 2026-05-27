@@ -1,30 +1,30 @@
-import { ServiceRepository, ServiceFilters } from '../../ports/ServiceRepository';
-import { QueryOptions } from '../../ports/QueryOptions';
+import { IServiceRepository, IServiceFilters } from '../../ports/ServiceRepository';
+import { IQueryOptions } from '../../ports/QueryOptions';
 import { IGetAllServices } from '../../ports/IUseCases';
-import { ServiceDTO } from '../../dtos/ServiceDTO';
+import { IServiceDTO } from '../../dtos/ServiceDTO';
 import { AppMapper } from '../../mappers/AppMapper';
 
 /**
  * Use case for retrieving all services.
  */
 export class GetAllServices implements IGetAllServices {
-  constructor(private serviceRepository: ServiceRepository) {}
+  constructor(private serviceRepository: IServiceRepository) {}
 
-  async execute(query: QueryOptions & ServiceFilters): Promise<{
-    services: ServiceDTO[];
+  async execute(query: IQueryOptions & IServiceFilters): Promise<{
+    services: IServiceDTO[];
     totalCount: number;
     totalPages: number;
     currentPage: number;
   }> {
     const { page, limit, sortBy, sortOrder, ...filters } = query;
-    const options: QueryOptions = { 
+    const options: IQueryOptions = { 
       page: page ? Number(page) : undefined, 
       limit: limit ? Number(limit) : undefined, 
       sortBy, 
       sortOrder: sortOrder as 'asc' | 'desc'
     };
     
-    const result = await this.serviceRepository.findAll(filters as ServiceFilters, options);
+    const result = await this.serviceRepository.findAll(filters as IServiceFilters, options);
     
     return {
       ...result,

@@ -2,48 +2,52 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BookingMapper = exports.ServiceMapper = exports.UserMapper = void 0;
 class UserMapper {
-    static toDomain(raw) {
+    static toDomain(doc) {
         return {
-            id: raw._id.toString(),
-            name: raw.name,
-            email: raw.email,
-            password: raw.password,
-            role: raw.role,
+            id: doc._id.toString(),
+            name: doc.name,
+            email: doc.email,
+            password: doc.password || '',
+            role: doc.role,
+            resetPasswordToken: doc.resetPasswordToken,
+            resetPasswordExpires: doc.resetPasswordExpires,
         };
     }
 }
 exports.UserMapper = UserMapper;
 class ServiceMapper {
-    static toDomain(raw) {
+    static toDomain(doc) {
         return {
-            id: raw._id.toString(),
-            title: raw.title,
-            category: raw.category,
-            pricePerDay: raw.pricePerDay,
-            description: raw.description,
-            availabilityDates: raw.availabilityDates,
-            contactDetails: raw.contactDetails,
-            location: raw.location,
+            id: doc._id.toString(),
+            title: doc.title,
+            category: doc.category,
+            pricePerDay: doc.pricePerDay,
+            description: doc.description,
+            availabilityDates: doc.availabilityDates,
+            contactDetails: doc.contactDetails,
+            location: doc.location,
         };
     }
 }
 exports.ServiceMapper = ServiceMapper;
 class BookingMapper {
-    static toDomain(raw) {
-        const userId = (raw.userId && typeof raw.userId === 'object' && raw.userId._id)
-            ? raw.userId._id.toString()
-            : raw.userId?.toString();
-        const serviceId = (raw.serviceId && typeof raw.serviceId === 'object' && raw.serviceId._id)
-            ? raw.serviceId._id.toString()
-            : raw.serviceId?.toString();
+    static toDomain(doc) {
+        const userDoc = doc.userId;
+        const userId = (userDoc && typeof userDoc === 'object' && '_id' in userDoc)
+            ? UserMapper.toDomain(userDoc)
+            : doc.userId.toString();
+        const serviceDoc = doc.serviceId;
+        const serviceId = (serviceDoc && typeof serviceDoc === 'object' && '_id' in serviceDoc)
+            ? ServiceMapper.toDomain(serviceDoc)
+            : doc.serviceId.toString();
         return {
-            id: raw._id.toString(),
-            userId,
-            serviceId,
-            startDate: new Date(raw.startDate),
-            endDate: new Date(raw.endDate),
-            totalPrice: raw.totalPrice,
-            status: raw.status,
+            id: doc._id.toString(),
+            userId: userId,
+            serviceId: serviceId,
+            startDate: new Date(doc.startDate),
+            endDate: new Date(doc.endDate),
+            totalPrice: doc.totalPrice,
+            status: doc.status,
         };
     }
 }

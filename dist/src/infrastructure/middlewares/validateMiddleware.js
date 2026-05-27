@@ -9,10 +9,13 @@ const validate = (req, res, next) => {
         next();
         return;
     }
-    const errorMessages = errors.array().map((err) => ({
-        field: err.path,
-        message: err.msg,
-    }));
+    const errorMessages = errors.array().map((err) => {
+        const error = err;
+        return {
+            field: error.path || error.param || "unknown",
+            message: error.msg,
+        };
+    });
     // Throw a BadRequestError with the first error message
     // The errorMiddleware can be expanded later to handle structured validation errors if needed
     throw new AppErrors_1.BadRequestError(errorMessages[0].message);

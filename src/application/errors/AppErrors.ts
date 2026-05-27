@@ -2,7 +2,7 @@
  * Base class for all application-specific errors.
  */
 export class AppError extends Error {
-  constructor(public message: string, public statusCode: number = 500) {
+  constructor(public message: string) {
     super(message);
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);
@@ -14,7 +14,7 @@ export class AppError extends Error {
  */
 export class BadRequestError extends AppError {
   constructor(message: string = 'Bad Request') {
-    super(message, 400);
+    super(message);
   }
 }
 
@@ -23,7 +23,7 @@ export class BadRequestError extends AppError {
  */
 export class UnauthorizedError extends AppError {
   constructor(message: string = 'Unauthorized') {
-    super(message, 401);
+    super(message);
   }
 }
 
@@ -32,7 +32,7 @@ export class UnauthorizedError extends AppError {
  */
 export class ForbiddenError extends AppError {
   constructor(message: string = 'Forbidden') {
-    super(message, 403);
+    super(message);
   }
 }
 
@@ -41,7 +41,7 @@ export class ForbiddenError extends AppError {
  */
 export class NotFoundError extends AppError {
   constructor(message: string = 'Resource not found') {
-    super(message, 404);
+    super(message);
   }
 }
 
@@ -50,6 +50,6 @@ export class NotFoundError extends AppError {
  */
 export class ConflictError extends AppError {
   constructor(message: string) {
-    super(message, 409);
+    super(message);
   }
 }

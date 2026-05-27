@@ -4,7 +4,7 @@ import { IService } from '../../domain/entities/Service';
 export declare const BOOKING_EVENTS: {
     CREATED: string;
 };
-export interface BookingCreatedEventData {
+export interface IBookingCreatedEventData {
     booking: IBooking;
     user: IUser;
     service: IService;

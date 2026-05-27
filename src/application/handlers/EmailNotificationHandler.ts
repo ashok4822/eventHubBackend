@@ -1,7 +1,7 @@
-import { EmailService } from '../ports/EmailService';
-import { EventBus } from '../ports/EventBus';
-import { BOOKING_EVENTS, BookingCreatedEventData } from '../events/BookingEvents';
-import { Logger } from '../ports/Logger';
+import { IEmailService } from '../ports/EmailService';
+import { IEventBus } from '../ports/EventBus';
+import { BOOKING_EVENTS, IBookingCreatedEventData } from '../events/BookingEvents';
+import { ILogger } from '../ports/ILogger';
 
 /**
  * Handler that reacts to booking events and sends email notifications.
@@ -9,21 +9,21 @@ import { Logger } from '../ports/Logger';
  */
 export class EmailNotificationHandler {
   constructor(
-    private emailService: EmailService,
-    private eventBus: EventBus,
-    private logger: Logger
+    private emailService: IEmailService,
+    private eventBus: IEventBus,
+    private logger: ILogger
   ) {}
 
   /**
    * Starts listening for events.
    */
   public listen(): void {
-    this.eventBus.on(BOOKING_EVENTS.CREATED, (data: BookingCreatedEventData) => {
-      this.handleBookingCreated(data);
+    this.eventBus.on(BOOKING_EVENTS.CREATED, (data: unknown) => {
+      this.handleBookingCreated(data as IBookingCreatedEventData);
     });
   }
 
-  private async handleBookingCreated(data: BookingCreatedEventData): Promise<void> {
+  private async handleBookingCreated(data: IBookingCreatedEventData): Promise<void> {
     try {
       this.logger.info(`Sending confirmation email for booking ${data.booking.id}`);
       await this.emailService.sendBookingConfirmation(data.user, data.service, data.booking);

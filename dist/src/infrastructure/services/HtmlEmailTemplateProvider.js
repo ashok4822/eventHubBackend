@@ -27,6 +27,28 @@ class HtmlEmailTemplateProvider {
       `,
         };
     }
+    getPasswordResetTemplate(user, resetLink) {
+        return {
+            subject: 'Password Reset Request - EventHub',
+            html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; borderRadius: 12px;">
+          <h2 style="color: #8b5cf6;">Password Reset</h2>
+          <p>Hi ${user.name},</p>
+          <p>We received a request to reset your password for your EventHub account. Click the button below to set a new password:</p>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetLink}" style="background: #8b5cf6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">Reset Password</a>
+          </div>
+          
+          <p>If you didn't request this, you can safely ignore this email. This link will expire in 1 hour.</p>
+          
+          <p>Thank you!</p>
+          <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+          <p style="font-size: 0.8rem; color: #64748b; text-align: center;">This is an automated message, please do not reply.</p>
+        </div>
+      `,
+        };
+    }
 }
 exports.HtmlEmailTemplateProvider = HtmlEmailTemplateProvider;
 //# sourceMappingURL=HtmlEmailTemplateProvider.js.map

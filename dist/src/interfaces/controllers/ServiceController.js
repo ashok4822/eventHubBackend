@@ -14,65 +14,45 @@ class ServiceController {
         this.deleteServiceUseCase = deleteServiceUseCase;
         this.getAllServicesUseCase = getAllServicesUseCase;
     }
-    async addService(req, res, next) {
-        try {
-            const { title, description, pricePerDay, location, contactDetails, category, availabilityDates } = req.body;
-            const service = await this.addServiceUseCase.execute({
-                title, description, pricePerDay, location, contactDetails, category, availabilityDates
-            });
-            res.status(statusCodes_1.STATUS_CODES.CREATED).json({
-                success: true,
-                data: service
-            });
-        }
-        catch (error) {
-            next(error);
-        }
+    async addService(req, res, _next) {
+        const { title, description, pricePerDay, location, contactDetails, category, availabilityDates } = req.body;
+        const service = await this.addServiceUseCase.execute({
+            title, description, pricePerDay, location, contactDetails, category, availabilityDates
+        });
+        res.status(statusCodes_1.STATUS_CODES.CREATED).json({
+            success: true,
+            data: service
+        });
     }
-    async editService(req, res, next) {
-        try {
-            const { id } = req.params;
-            const { title, description, pricePerDay, location, contactDetails, category, availabilityDates } = req.body;
-            const service = await this.editServiceUseCase.execute(id, {
-                title, description, pricePerDay, location, contactDetails, category, availabilityDates
-            });
+    async editService(req, res, _next) {
+        const { id } = req.params;
+        const { title, description, pricePerDay, location, contactDetails, category, availabilityDates } = req.body;
+        const service = await this.editServiceUseCase.execute(id, {
+            title, description, pricePerDay, location, contactDetails, category, availabilityDates
+        });
+        res.json({
+            success: true,
+            data: service
+        });
+    }
+    async deleteService(req, res, _next) {
+        const success = await this.deleteServiceUseCase.execute(req.params.id);
+        if (success) {
             res.json({
                 success: true,
-                data: service
+                message: messages_1.MESSAGES.SERVICE.DELETED
             });
         }
-        catch (error) {
-            next(error);
+        else {
+            throw new AppErrors_1.BadRequestError('Service not found or could not be deleted');
         }
     }
-    async deleteService(req, res, next) {
-        try {
-            const success = await this.deleteServiceUseCase.execute(req.params.id);
-            if (success) {
-                res.json({
-                    success: true,
-                    message: messages_1.MESSAGES.SERVICE.DELETED
-                });
-            }
-            else {
-                throw new AppErrors_1.BadRequestError('Service not found or could not be deleted');
-            }
-        }
-        catch (error) {
-            next(error);
-        }
-    }
-    async getAllServices(req, res, next) {
-        try {
-            const services = await this.getAllServicesUseCase.execute(req.query);
-            res.json({
-                success: true,
-                data: services
-            });
-        }
-        catch (error) {
-            next(error);
-        }
+    async getAllServices(req, res, _next) {
+        const services = await this.getAllServicesUseCase.execute(req.query);
+        res.json({
+            success: true,
+            data: services
+        });
     }
 }
 exports.ServiceController = ServiceController;

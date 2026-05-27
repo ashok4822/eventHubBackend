@@ -1,8 +1,10 @@
+import { IUser } from './User';
+import { IService } from './Service';
 export type BookingStatus = 'confirmed' | 'cancelled';
 export interface IBooking {
     id?: string;
-    userId: string;
-    serviceId: string;
+    userId: string | IUser;
+    serviceId: string | IService;
     startDate: Date;
     endDate: Date;
     totalPrice: number;
@@ -10,8 +12,8 @@ export interface IBooking {
 }
 declare class Booking implements IBooking {
     id?: string;
-    userId: string;
-    serviceId: string;
+    userId: string | IUser;
+    serviceId: string | IService;
     startDate: Date;
     endDate: Date;
     totalPrice: number;

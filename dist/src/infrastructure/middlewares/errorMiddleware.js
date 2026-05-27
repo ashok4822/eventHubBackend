@@ -8,10 +8,21 @@ const messages_1 = require("../../interfaces/constants/messages");
  * Global error handling middleware for Express.
  * Maps application errors to HTTP responses.
  */
-const errorMiddleware = (err, req, res, next) => {
+const errorMiddleware = (err, req, res, _next) => {
     console.error(`[ERROR] ${err.name}: ${err.message}`);
     if (err instanceof AppErrors_1.AppError) {
-        return res.status(err.statusCode).json({
+        let statusCode = statusCodes_1.STATUS_CODES.INTERNAL_SERVER_ERROR;
+        if (err instanceof AppErrors_1.BadRequestError)
+            statusCode = statusCodes_1.STATUS_CODES.BAD_REQUEST;
+        else if (err instanceof AppErrors_1.UnauthorizedError)
+            statusCode = statusCodes_1.STATUS_CODES.UNAUTHORIZED;
+        else if (err instanceof AppErrors_1.ForbiddenError)
+            statusCode = statusCodes_1.STATUS_CODES.FORBIDDEN;
+        else if (err instanceof AppErrors_1.NotFoundError)
+            statusCode = statusCodes_1.STATUS_CODES.NOT_FOUND;
+        else if (err instanceof AppErrors_1.ConflictError)
+            statusCode = statusCodes_1.STATUS_CODES.CONFLICT;
+        return res.status(statusCode).json({
             success: false,
             error: err.name,
             message: err.message,

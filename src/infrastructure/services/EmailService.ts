@@ -1,23 +1,13 @@
 import nodemailer from 'nodemailer';
 import { IEmailConfig } from '../../application/ports/IAppConfig';
-import { EmailTemplateProvider } from '../../application/ports/EmailTemplateProvider';
+import { IEmailTemplateProvider } from '../../application/ports/EmailTemplateProvider';
+import { ILogger } from '../../application/ports/ILogger';
+import { IEmailService } from '../../application/ports/EmailService';
 
-interface UserInfo {
-  name: string;
-  email: string;
-}
+import { IUser } from '../../domain/entities/User';
+import { IService } from '../../domain/entities/Service';
+import { IBooking } from '../../domain/entities/Booking';
 
-interface ServiceInfo {
-  title: string;
-}
-
-interface BookingInfo {
-  startDate: string | Date;
-  endDate: string | Date;
-  totalPrice: number;
-}
-
-import { EmailService as IEmailService } from '../../application/ports/EmailService';
 
 /**
  * Service to handle sending emails.
@@ -27,7 +17,8 @@ export class EmailService implements IEmailService {
 
   constructor(
     private config: IEmailConfig,
-    private templateProvider: EmailTemplateProvider
+    private templateProvider: IEmailTemplateProvider,
+    private logger: ILogger
   ) {
     this.transporter = nodemailer.createTransport({
       service: this.config.service,
@@ -39,12 +30,12 @@ export class EmailService implements IEmailService {
   }
 
   async sendBookingConfirmation(
-    user: UserInfo,
-    service: ServiceInfo,
-    booking: BookingInfo
+    user: IUser,
+    service: IService,
+    booking: IBooking
   ): Promise<void> {
     if (!this.config.auth.user || !this.config.auth.pass) {
-      console.warn('Email credentials not provided. Skipping email notification.');
+      this.logger.warn('Email credentials not provided. Skipping email notification.');
       return;
     }
 
@@ -59,20 +50,20 @@ export class EmailService implements IEmailService {
 
     try {
       await this.transporter.sendMail(mailOptions);
-      console.log(`Confirmation email sent to ${user.email}`);
+      this.logger.info(`Confirmation email sent to ${user.email}`);
     } catch (error) {
-      console.error('Error sending confirmation email:', error);
+      this.logger.error('Error sending confirmation email:', error);
     }
   }
 
-  async sendPasswordResetEmail(user: UserInfo, resetToken: string): Promise<void> {
+  async sendPasswordResetEmail(user: IUser, resetToken: string): Promise<void> {
     if (!this.config.auth.user || !this.config.auth.pass) {
-      console.warn('Email credentials not provided. Skipping email notification.');
-      console.log(`Reset Token for ${user.email}: ${resetToken}`);
+      this.logger.warn('Email credentials not provided. Skipping email notification.');
+      this.logger.info(`Reset Token for ${user.email}: ${resetToken}`);
       return;
     }
 
-    const resetLink = `http://localhost:5173/reset-password/${resetToken}`;
+    const resetLink = `${this.config.frontendUrl}/reset-password/${resetToken}`;
     const { subject, html } = this.templateProvider.getPasswordResetTemplate(user, resetLink);
 
     const mailOptions: nodemailer.SendMailOptions = {
@@ -84,9 +75,9 @@ export class EmailService implements IEmailService {
 
     try {
       await this.transporter.sendMail(mailOptions);
-      console.log(`Password reset email sent to ${user.email}`);
+      this.logger.info(`Password reset email sent to ${user.email}`);
     } catch (error) {
-      console.error('Error sending password reset email:', error);
+      this.logger.error('Error sending password reset email:', error);
     }
   }
 }

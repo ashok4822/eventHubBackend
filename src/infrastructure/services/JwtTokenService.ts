@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
-import { TokenService, TokenPayload } from '../../application/ports/TokenService';
+import { ITokenService, ITokenPayload } from '../../application/ports/ITokenService';
 
 /**
  * Concrete implementation of TokenService using jsonwebtoken.
  */
-export class JwtTokenService extends TokenService {
+export class JwtTokenService extends ITokenService {
   constructor(
     private accessSecret: string,
     private refreshSecret: string
@@ -12,20 +12,20 @@ export class JwtTokenService extends TokenService {
     super();
   }
 
-  generateAccessToken(payload: TokenPayload): string {
+  generateAccessToken(payload: ITokenPayload): string {
     return jwt.sign(payload as object, this.accessSecret, { expiresIn: '15m' });
   }
 
-  generateRefreshToken(payload: TokenPayload): string {
+  generateRefreshToken(payload: ITokenPayload): string {
     return jwt.sign(payload as object, this.refreshSecret, { expiresIn: '7d' });
   }
 
 
-  verifyAccessToken(token: string): TokenPayload {
-    return jwt.verify(token, this.accessSecret) as TokenPayload;
+  verifyAccessToken(token: string): ITokenPayload {
+    return jwt.verify(token, this.accessSecret) as ITokenPayload;
   }
 
-  verifyRefreshToken(token: string): TokenPayload {
-    return jwt.verify(token, this.refreshSecret) as TokenPayload;
+  verifyRefreshToken(token: string): ITokenPayload {
+    return jwt.verify(token, this.refreshSecret) as ITokenPayload;
   }
 }

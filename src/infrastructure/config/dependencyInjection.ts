@@ -1,6 +1,6 @@
-import { MongooseUserRepository } from '../repositories/MongooseUserRepository';
-import { MongooseServiceRepository } from '../repositories/MongooseServiceRepository';
-import { MongooseBookingRepository } from '../repositories/MongooseBookingRepository';
+import { UserRepository } from '../repositories/UserRepository';
+import { ServiceRepository } from '../repositories/ServiceRepository';
+import { BookingRepository } from '../repositories/BookingRepository';
 import { BcryptPasswordHasher } from '../security/BcryptPasswordHasher';
 import { JwtTokenService } from '../services/JwtTokenService';
 import { EmailService } from '../services/EmailService';
@@ -30,16 +30,16 @@ import { BookingController } from '../../interfaces/controllers/BookingControlle
 import { AppConfig } from './AppConfig';
 
 // 1. Repositories
-const userRepository = new MongooseUserRepository();
-const serviceRepository = new MongooseServiceRepository();
-const bookingRepository = new MongooseBookingRepository();
+const userRepository = new UserRepository();
+const serviceRepository = new ServiceRepository();
+const bookingRepository = new BookingRepository();
 
 // 2. Services
 const passwordHasher = new BcryptPasswordHasher();
 const tokenService = new JwtTokenService(AppConfig.JWT.ACCESS_SECRET, AppConfig.JWT.REFRESH_SECRET);
 const templateProvider = new HtmlEmailTemplateProvider();
-const emailService = new EmailService(AppConfig.EMAIL, templateProvider);
 const logger = new ConsoleLogger();
+const emailService = new EmailService(AppConfig.EMAIL, templateProvider, logger);
 const authMiddleware = new AuthMiddleware(tokenService);
 const eventBus = new EventEmitterBus();
 

@@ -17,6 +17,7 @@ export interface IEmailConfig {
         user: string | undefined;
         pass: string | undefined;
     };
+    frontendUrl: string;
 }
 export interface IServerConfig {
     NODE_ENV: string;

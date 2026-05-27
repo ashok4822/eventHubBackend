@@ -1,7 +1,10 @@
-import { EmailTemplate, EmailTemplateProvider } from '../../application/ports/EmailTemplateProvider';
+import { IBooking } from '../../domain/entities/Booking';
+import { IService } from '../../domain/entities/Service';
+import { IUser } from '../../domain/entities/User';
+import { IEmailTemplate, IEmailTemplateProvider } from '../../application/ports/EmailTemplateProvider';
 
-export class HtmlEmailTemplateProvider implements EmailTemplateProvider {
-  getBookingConfirmationTemplate(user: any, service: any, booking: any): EmailTemplate {
+export class HtmlEmailTemplateProvider implements IEmailTemplateProvider {
+  getBookingConfirmationTemplate(user: IUser, service: IService, booking: IBooking): IEmailTemplate {
     return {
       subject: 'Booking Confirmation - EventHub',
       html: `
@@ -27,7 +30,7 @@ export class HtmlEmailTemplateProvider implements EmailTemplateProvider {
     };
   }
 
-  getPasswordResetTemplate(user: any, resetLink: string): EmailTemplate {
+  getPasswordResetTemplate(user: IUser, resetLink: string): IEmailTemplate {
     return {
       subject: 'Password Reset Request - EventHub',
       html: `

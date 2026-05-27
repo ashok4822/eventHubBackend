@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { TokenService } from '../../application/ports/TokenService';
+import { ITokenService } from '../../application/ports/ITokenService';
 import { UnauthorizedError, ForbiddenError } from '../../application/errors/AppErrors';
 
 /**
@@ -7,7 +7,7 @@ import { UnauthorizedError, ForbiddenError } from '../../application/errors/AppE
  * Follows DIP by depending on TokenService port.
  */
 export class AuthMiddleware {
-  constructor(private tokenService: TokenService) {}
+  constructor(private tokenService: ITokenService) {}
 
   /**
    * Protects routes by verifying the JWT access token.
@@ -26,7 +26,7 @@ export class AuthMiddleware {
         };
         
         return next();
-      } catch (error) {
+      } catch (_error) {
         throw new UnauthorizedError('Not authorized, token failed');
       }
     }
@@ -39,7 +39,7 @@ export class AuthMiddleware {
   /**
    * Restricts access to admin users only.
    */
-  public admin = (req: Request, res: Response, next: NextFunction): void => {
+  public admin = (req: Request, _res: Response, next: NextFunction): void => {
     if (req.user && req.user.role === 'admin') {
       next();
     } else {

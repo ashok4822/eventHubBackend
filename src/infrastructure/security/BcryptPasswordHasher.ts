@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
-import { PasswordHasher } from '../../application/ports/PasswordHasher';
+import { IPasswordHasher } from '../../application/ports/IPasswordHasher';
 
 /**
  * Concrete implementation of PasswordHasher using bcryptjs.
  */
-export class BcryptPasswordHasher extends PasswordHasher {
+export class BcryptPasswordHasher extends IPasswordHasher {
   async hash(password: string): Promise<string> {
     const saltRounds = 10;
     return await bcrypt.hash(password, saltRounds);

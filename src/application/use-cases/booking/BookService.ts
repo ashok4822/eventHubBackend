@@ -1,12 +1,12 @@
-import { BookingRepository } from '../../ports/BookingRepository';
-import { ServiceRepository } from '../../ports/ServiceRepository';
-import { UserRepository } from '../../ports/UserRepository';
-import { EventBus } from '../../ports/EventBus';
+import { IBookingRepository } from '../../ports/BookingRepository';
+import { IServiceRepository } from '../../ports/ServiceRepository';
+import { IUserRepository } from '../../ports/UserRepository';
+import { IEventBus } from '../../ports/EventBus';
 import Booking from '../../../domain/entities/Booking';
 import { BadRequestError, NotFoundError } from '../../errors/AppErrors';
-import { BOOKING_EVENTS, BookingCreatedEventData } from '../../events/BookingEvents';
+import { BOOKING_EVENTS, IBookingCreatedEventData } from '../../events/BookingEvents';
 import { IBookService } from '../../ports/IUseCases';
-import { BookingDTO, CreateBookingRequestDTO } from '../../dtos/BookingDTO';
+import { IBookingDTO, ICreateBookingRequestDTO } from '../../dtos/BookingDTO';
 import { AppMapper } from '../../mappers/AppMapper';
 
 /**
@@ -17,21 +17,22 @@ import { AppMapper } from '../../mappers/AppMapper';
  */
 export class BookService implements IBookService {
   constructor(
-    private bookingRepository: BookingRepository,
-    private serviceRepository: ServiceRepository,
-    private userRepository: UserRepository,
-    private eventBus: EventBus
+    private bookingRepository: IBookingRepository,
+    private serviceRepository: IServiceRepository,
+    private userRepository: IUserRepository,
+    private eventBus: IEventBus
   ) {}
 
-  async execute({ userId, serviceId, startDate, endDate }: CreateBookingRequestDTO): Promise<BookingDTO> {
+  async execute({ userId, serviceId, startDate, endDate }: ICreateBookingRequestDTO): Promise<IBookingDTO> {
     const start = new Date(startDate);
     const end = new Date(endDate);
 
     // Business validation moved to Domain Entity
     try {
       Booking.validateDates(start, end);
-    } catch (error: any) {
-      throw new BadRequestError(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Invalid dates';
+      throw new BadRequestError(message);
     }
 
     const [user, service] = await Promise.all([
@@ -54,7 +55,7 @@ export class BookService implements IBookService {
     });
 
     // Emit event for side effects (e.g., email notification)
-    const eventData: BookingCreatedEventData = {
+    const eventData: IBookingCreatedEventData = {
       booking,
       user,
       service,

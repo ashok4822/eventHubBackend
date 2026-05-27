@@ -1,4 +1,4 @@
-import { ServiceRepository } from '../../ports/ServiceRepository';
+import { IServiceRepository } from '../../ports/ServiceRepository';
 
 import { IDeleteService } from '../../ports/IUseCases';
 
@@ -6,7 +6,7 @@ import { IDeleteService } from '../../ports/IUseCases';
  * Use case for deleting a service.
  */
 export class DeleteService implements IDeleteService {
-  constructor(private serviceRepository: ServiceRepository) {}
+  constructor(private serviceRepository: IServiceRepository) {}
 
   async execute(id: string): Promise<boolean> {
     return await this.serviceRepository.delete(id);

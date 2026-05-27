@@ -1,6 +1,6 @@
 import { ServiceCategory } from '../../domain/entities/Service';
 
-export interface ServiceDTO {
+export interface IServiceDTO {
   id: string;
   _id?: string;
   title: string;
@@ -12,7 +12,7 @@ export interface ServiceDTO {
   location: string;
 }
 
-export interface CreateServiceRequestDTO {
+export interface ICreateServiceRequestDTO {
   title: string;
   category: ServiceCategory;
   pricePerDay: number;

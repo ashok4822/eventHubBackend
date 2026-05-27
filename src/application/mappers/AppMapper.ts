@@ -1,12 +1,12 @@
 import { IUser } from '../../domain/entities/User';
 import { IService } from '../../domain/entities/Service';
 import { IBooking } from '../../domain/entities/Booking';
-import { UserDTO } from '../dtos/UserDTO';
-import { ServiceDTO } from '../dtos/ServiceDTO';
-import { BookingDTO } from '../dtos/BookingDTO';
+import { IUserDTO } from '../dtos/UserDTO';
+import { IServiceDTO } from '../dtos/ServiceDTO';
+import { IBookingDTO } from '../dtos/BookingDTO';
 
 export class AppMapper {
-  static toUserDTO(user: IUser): UserDTO {
+  static toUserDTO(user: IUser): IUserDTO {
     return {
       id: user.id!,
       _id: user.id,
@@ -16,7 +16,7 @@ export class AppMapper {
     };
   }
 
-  static toServiceDTO(service: IService): ServiceDTO {
+  static toServiceDTO(service: IService): IServiceDTO {
     return {
       id: service.id!,
       _id: service.id,
@@ -30,7 +30,7 @@ export class AppMapper {
     };
   }
 
-  static toBookingDTO(booking: IBooking): BookingDTO {
+  static toBookingDTO(booking: IBooking): IBookingDTO {
     return {
       id: booking.id!,
       _id: booking.id,

@@ -1,9 +1,15 @@
-import { HttpRequest, HttpResponse, HttpNext } from '../types/HttpTypes';
+import { IHttpRequest, IHttpResponse, HttpNext } from '../types/HttpTypes';
 import { UnauthorizedError } from '../../application/errors/AppErrors';
 import { STATUS_CODES } from '../constants/statusCodes';
 import { MESSAGES } from '../constants/messages';
 import { ICookieSettings } from '../../application/ports/IAppConfig';
-import { IRegisterUser, ILoginUser, IRefreshToken } from '../../application/ports/IUseCases';
+import { 
+  IRegisterUser, 
+  ILoginUser, 
+  IRefreshToken, 
+  IRequestPasswordReset, 
+  IResetPassword 
+} from '../../application/ports/IUseCases';
 
 /**
  * Controller for user authentication and authorization.
@@ -19,7 +25,7 @@ export class AuthController {
   ) { }
 
 
-  async register(req: HttpRequest, res: HttpResponse, next: HttpNext): Promise<void> {
+  async register(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const { name, email, password, role } = req.body;
     const user = await this.registerUseCase.execute({ name, email, password, role });
     res.status(STATUS_CODES.CREATED).json({
@@ -29,7 +35,7 @@ export class AuthController {
     });
   }
 
-  async login(req: HttpRequest, res: HttpResponse, next: HttpNext): Promise<void> {
+  async login(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const { email, password } = req.body;
     const { accessToken, refreshToken, user } = await this.loginUseCase.execute({ email, password });
 
@@ -44,7 +50,7 @@ export class AuthController {
     });
   }
 
-  async refresh(req: HttpRequest, res: HttpResponse, next: HttpNext): Promise<void> {
+  async refresh(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const refreshToken: string | undefined = req.cookies.refreshToken;
 
     if (!refreshToken) {
@@ -58,7 +64,7 @@ export class AuthController {
     });
   }
 
-  async logout(req: HttpRequest, res: HttpResponse): Promise<void> {
+  async logout(req: IHttpRequest, res: IHttpResponse): Promise<void> {
     res.clearCookie('refreshToken', {
       httpOnly: this.config.httpOnly,
       secure: this.config.secure,
@@ -70,7 +76,7 @@ export class AuthController {
     });
   }
 
-  async forgotPassword(req: HttpRequest, res: HttpResponse): Promise<void> {
+  async forgotPassword(req: IHttpRequest, res: IHttpResponse): Promise<void> {
     const { email } = req.body;
     await this.requestPasswordResetUseCase.execute(email);
     res.json({
@@ -79,7 +85,7 @@ export class AuthController {
     });
   }
 
-  async resetPassword(req: HttpRequest, res: HttpResponse): Promise<void> {
+  async resetPassword(req: IHttpRequest, res: IHttpResponse): Promise<void> {
     const { token } = req.params;
     const { password } = req.body;
     await this.resetPasswordUseCase.execute(token, password);

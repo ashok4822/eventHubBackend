@@ -9,9 +9,10 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
  * Service to handle sending emails.
  */
 class EmailService {
-    constructor(config, templateProvider) {
+    constructor(config, templateProvider, logger) {
         this.config = config;
         this.templateProvider = templateProvider;
+        this.logger = logger;
         this.transporter = nodemailer_1.default.createTransport({
             service: this.config.service,
             auth: {
@@ -22,7 +23,7 @@ class EmailService {
     }
     async sendBookingConfirmation(user, service, booking) {
         if (!this.config.auth.user || !this.config.auth.pass) {
-            console.warn('Email credentials not provided. Skipping email notification.');
+            this.logger.warn('Email credentials not provided. Skipping email notification.');
             return;
         }
         const { subject, html } = this.templateProvider.getBookingConfirmationTemplate(user, service, booking);
@@ -34,10 +35,32 @@ class EmailService {
         };
         try {
             await this.transporter.sendMail(mailOptions);
-            console.log(`Confirmation email sent to ${user.email}`);
+            this.logger.info(`Confirmation email sent to ${user.email}`);
         }
         catch (error) {
-            console.error('Error sending confirmation email:', error);
+            this.logger.error('Error sending confirmation email:', error);
+        }
+    }
+    async sendPasswordResetEmail(user, resetToken) {
+        if (!this.config.auth.user || !this.config.auth.pass) {
+            this.logger.warn('Email credentials not provided. Skipping email notification.');
+            this.logger.info(`Reset Token for ${user.email}: ${resetToken}`);
+            return;
+        }
+        const resetLink = `${this.config.frontendUrl}/reset-password/${resetToken}`;
+        const { subject, html } = this.templateProvider.getPasswordResetTemplate(user, resetLink);
+        const mailOptions = {
+            from: `"EventHub" <${this.config.auth.user}>`,
+            to: user.email,
+            subject,
+            html,
+        };
+        try {
+            await this.transporter.sendMail(mailOptions);
+            this.logger.info(`Password reset email sent to ${user.email}`);
+        }
+        catch (error) {
+            this.logger.error('Error sending password reset email:', error);
         }
     }
 }

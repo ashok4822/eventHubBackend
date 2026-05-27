@@ -1,5 +1,5 @@
-import { TokenService } from '../../ports/TokenService';
-import { UserRepository } from '../../ports/UserRepository';
+import { ITokenService } from '../../ports/ITokenService';
+import { IUserRepository } from '../../ports/UserRepository';
 import { NotFoundError } from '../../errors/AppErrors';
 
 import { IRefreshToken } from '../../ports/IUseCases';
@@ -9,8 +9,8 @@ import { IRefreshToken } from '../../ports/IUseCases';
  */
 export class RefreshToken implements IRefreshToken {
   constructor(
-    private userRepository: UserRepository,
-    private tokenService: TokenService
+    private userRepository: IUserRepository,
+    private tokenService: ITokenService
   ) {}
 
   async execute(refreshToken: string): Promise<{ accessToken: string }> {

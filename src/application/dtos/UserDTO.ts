@@ -1,4 +1,4 @@
-export interface UserDTO {
+export interface IUserDTO {
   id: string;
   _id?: string;
   name: string;
@@ -6,8 +6,8 @@ export interface UserDTO {
   role: 'user' | 'admin';
 }
 
-export interface AuthResponseDTO {
-  user: UserDTO;
+export interface IAuthResponseDTO {
+  user: IUserDTO;
   accessToken: string;
   refreshToken?: string;
 }

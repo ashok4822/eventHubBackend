@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeHandlers = exports.authMiddleware = exports.bookingController = exports.serviceController = exports.authController = void 0;
-const MongooseUserRepository_1 = require("../repositories/MongooseUserRepository");
-const MongooseServiceRepository_1 = require("../repositories/MongooseServiceRepository");
-const MongooseBookingRepository_1 = require("../repositories/MongooseBookingRepository");
+const UserRepository_1 = require("../repositories/UserRepository");
+const ServiceRepository_1 = require("../repositories/ServiceRepository");
+const BookingRepository_1 = require("../repositories/BookingRepository");
 const BcryptPasswordHasher_1 = require("../security/BcryptPasswordHasher");
 const JwtTokenService_1 = require("../services/JwtTokenService");
 const EmailService_1 = require("../services/EmailService");
@@ -15,6 +15,8 @@ const EmailNotificationHandler_1 = require("../../application/handlers/EmailNoti
 const RegisterUser_1 = require("../../application/use-cases/user/RegisterUser");
 const LoginUser_1 = require("../../application/use-cases/user/LoginUser");
 const RefreshToken_1 = require("../../application/use-cases/user/RefreshToken");
+const RequestPasswordReset_1 = require("../../application/use-cases/user/RequestPasswordReset");
+const ResetPassword_1 = require("../../application/use-cases/user/ResetPassword");
 const AddService_1 = require("../../application/use-cases/service/AddService");
 const EditService_1 = require("../../application/use-cases/service/EditService");
 const DeleteService_1 = require("../../application/use-cases/service/DeleteService");
@@ -27,15 +29,15 @@ const ServiceController_1 = require("../../interfaces/controllers/ServiceControl
 const BookingController_1 = require("../../interfaces/controllers/BookingController");
 const AppConfig_1 = require("./AppConfig");
 // 1. Repositories
-const userRepository = new MongooseUserRepository_1.MongooseUserRepository();
-const serviceRepository = new MongooseServiceRepository_1.MongooseServiceRepository();
-const bookingRepository = new MongooseBookingRepository_1.MongooseBookingRepository();
+const userRepository = new UserRepository_1.UserRepository();
+const serviceRepository = new ServiceRepository_1.ServiceRepository();
+const bookingRepository = new BookingRepository_1.BookingRepository();
 // 2. Services
 const passwordHasher = new BcryptPasswordHasher_1.BcryptPasswordHasher();
 const tokenService = new JwtTokenService_1.JwtTokenService(AppConfig_1.AppConfig.JWT.ACCESS_SECRET, AppConfig_1.AppConfig.JWT.REFRESH_SECRET);
 const templateProvider = new HtmlEmailTemplateProvider_1.HtmlEmailTemplateProvider();
-const emailService = new EmailService_1.EmailService(AppConfig_1.AppConfig.EMAIL, templateProvider);
 const logger = new ConsoleLogger_1.ConsoleLogger();
+const emailService = new EmailService_1.EmailService(AppConfig_1.AppConfig.EMAIL, templateProvider, logger);
 const authMiddleware = new authMiddleware_1.AuthMiddleware(tokenService);
 exports.authMiddleware = authMiddleware;
 const eventBus = new EventEmitterBus_1.EventEmitterBus();
@@ -54,6 +56,8 @@ exports.initializeHandlers = initializeHandlers;
 const registerUseCase = new RegisterUser_1.RegisterUser(userRepository, passwordHasher);
 const loginUseCase = new LoginUser_1.LoginUser(userRepository, passwordHasher, tokenService);
 const refreshTokenUseCase = new RefreshToken_1.RefreshToken(userRepository, tokenService);
+const requestPasswordResetUseCase = new RequestPasswordReset_1.RequestPasswordReset(userRepository, emailService);
+const resetPasswordUseCase = new ResetPassword_1.ResetPassword(userRepository, passwordHasher);
 const addServiceUseCase = new AddService_1.AddService(serviceRepository);
 const editServiceUseCase = new EditService_1.EditService(serviceRepository);
 const deleteServiceUseCase = new DeleteService_1.DeleteService(serviceRepository);
@@ -62,7 +66,7 @@ const bookServiceUseCase = new BookService_1.BookService(bookingRepository, serv
 const getUserBookingsUseCase = new GetUserBookings_1.GetUserBookings(bookingRepository);
 const getAdminBookingsUseCase = new GetAdminBookings_1.GetAdminBookings(bookingRepository);
 // 4. Controllers
-const authController = new AuthController_1.AuthController(registerUseCase, loginUseCase, refreshTokenUseCase, AppConfig_1.AppConfig.COOKIE_SETTINGS);
+const authController = new AuthController_1.AuthController(registerUseCase, loginUseCase, refreshTokenUseCase, requestPasswordResetUseCase, resetPasswordUseCase, AppConfig_1.AppConfig.COOKIE_SETTINGS);
 exports.authController = authController;
 const serviceController = new ServiceController_1.ServiceController(addServiceUseCase, editServiceUseCase, deleteServiceUseCase, getAllServicesUseCase);
 exports.serviceController = serviceController;

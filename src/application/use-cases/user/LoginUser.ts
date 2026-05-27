@@ -1,9 +1,9 @@
-import { PasswordHasher } from '../../ports/PasswordHasher';
-import { TokenService } from '../../ports/TokenService';
-import { UserRepository } from '../../ports/UserRepository';
+import { IPasswordHasher } from '../../ports/IPasswordHasher';
+import { ITokenService } from '../../ports/ITokenService';
+import { IUserRepository } from '../../ports/UserRepository';
 import { UnauthorizedError } from '../../errors/AppErrors';
 import { ILoginUser } from '../../ports/IUseCases';
-import { AuthResponseDTO } from '../../dtos/UserDTO';
+import { IAuthResponseDTO } from '../../dtos/UserDTO';
 import { AppMapper } from '../../mappers/AppMapper';
 
 /**
@@ -11,12 +11,12 @@ import { AppMapper } from '../../mappers/AppMapper';
  */
 export class LoginUser implements ILoginUser {
   constructor(
-    private userRepository: UserRepository,
-    private passwordHasher: PasswordHasher,
-    private tokenService: TokenService
+    private userRepository: IUserRepository,
+    private passwordHasher: IPasswordHasher,
+    private tokenService: ITokenService
   ) {}
 
-  async execute({ email, password }: Parameters<ILoginUser['execute']>[0]): Promise<AuthResponseDTO> {
+  async execute({ email, password }: Parameters<ILoginUser['execute']>[0]): Promise<IAuthResponseDTO> {
     if (!email || !password) {
       throw new Error('Email and password are required');
     }

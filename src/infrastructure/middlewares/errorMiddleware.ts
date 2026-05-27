@@ -1,5 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import { AppError } from '../../application/errors/AppErrors';
+import { 
+  AppError, 
+  BadRequestError, 
+  UnauthorizedError, 
+  ForbiddenError, 
+  NotFoundError, 
+  ConflictError 
+} from '../../application/errors/AppErrors';
 import { STATUS_CODES } from '../../interfaces/constants/statusCodes';
 import { MESSAGES } from '../../interfaces/constants/messages';
 
@@ -11,12 +18,20 @@ export const errorMiddleware = (
   err: Error,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   console.error(`[ERROR] ${err.name}: ${err.message}`);
 
   if (err instanceof AppError) {
-    return res.status(err.statusCode).json({
+    let statusCode: number = STATUS_CODES.INTERNAL_SERVER_ERROR;
+
+    if (err instanceof BadRequestError) statusCode = STATUS_CODES.BAD_REQUEST;
+    else if (err instanceof UnauthorizedError) statusCode = STATUS_CODES.UNAUTHORIZED;
+    else if (err instanceof ForbiddenError) statusCode = STATUS_CODES.FORBIDDEN;
+    else if (err instanceof NotFoundError) statusCode = STATUS_CODES.NOT_FOUND;
+    else if (err instanceof ConflictError) statusCode = STATUS_CODES.CONFLICT;
+
+    return res.status(statusCode).json({
       success: false,
       error: err.name,
       message: err.message,

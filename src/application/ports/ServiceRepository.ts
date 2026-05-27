@@ -1,19 +1,17 @@
 import { IService } from '../../domain/entities/Service';
-import { QueryOptions } from './QueryOptions';
+import { IQueryOptions } from './QueryOptions';
+import { IBaseRepository } from './BaseRepository';
 
-export interface ServiceFilters {
+export interface IServiceFilters {
   category?: string;
   location?: string;
   minPrice?: number;
   maxPrice?: number;
 }
 
-export interface ServiceRepository {
-  findById(id: string): Promise<IService | null>;
-  save(service: IService): Promise<IService>;
+export interface IServiceRepository extends IBaseRepository<IService> {
   update(id: string, service: Partial<IService>): Promise<IService | null>;
-  delete(id: string): Promise<boolean>;
-  findAll(filters: ServiceFilters, options: QueryOptions): Promise<{
+  findAll(filters: IServiceFilters, options: IQueryOptions): Promise<{
     services: IService[];
     totalCount: number;
     totalPages: number;

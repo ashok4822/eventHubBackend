@@ -1,5 +1,5 @@
-import { UserRepository } from '../../ports/UserRepository';
-import { EmailService } from '../../ports/EmailService';
+import { IUserRepository } from '../../ports/UserRepository';
+import { IEmailService } from '../../ports/EmailService';
 import { IRequestPasswordReset } from '../../ports/IUseCases';
 import crypto from 'crypto';
 
@@ -8,8 +8,8 @@ import crypto from 'crypto';
  */
 export class RequestPasswordReset implements IRequestPasswordReset {
   constructor(
-    private userRepository: UserRepository,
-    private emailService: EmailService
+    private userRepository: IUserRepository,
+    private emailService: IEmailService
   ) {}
 
   async execute(email: string): Promise<void> {

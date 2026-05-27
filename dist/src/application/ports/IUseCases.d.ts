@@ -1,52 +1,58 @@
 import { IService } from '../../domain/entities/Service';
-import { ServiceFilters } from './ServiceRepository';
-import { QueryOptions } from './QueryOptions';
-import { UserDTO, AuthResponseDTO } from '../dtos/UserDTO';
-import { ServiceDTO, CreateServiceRequestDTO } from '../dtos/ServiceDTO';
-import { BookingDTO, CreateBookingRequestDTO } from '../dtos/BookingDTO';
+import { IServiceFilters } from './ServiceRepository';
+import { IQueryOptions } from './QueryOptions';
+import { IUserDTO, IAuthResponseDTO } from '../dtos/UserDTO';
+import { IServiceDTO, ICreateServiceRequestDTO } from '../dtos/ServiceDTO';
+import { IBookingDTO, ICreateBookingRequestDTO } from '../dtos/BookingDTO';
 export interface IRegisterUser {
     execute(data: {
         name: string;
         email: string;
         password: string;
         role?: 'user' | 'admin';
-    }): Promise<UserDTO>;
+    }): Promise<IUserDTO>;
 }
 export interface ILoginUser {
     execute(data: {
         email: string;
         password: string;
-    }): Promise<AuthResponseDTO>;
+    }): Promise<IAuthResponseDTO>;
 }
 export interface IRefreshToken {
     execute(refreshToken: string): Promise<{
         accessToken: string;
     }>;
 }
+export interface IRequestPasswordReset {
+    execute(email: string): Promise<void>;
+}
+export interface IResetPassword {
+    execute(token: string, password: string): Promise<void>;
+}
 export interface IAddService {
-    execute(data: CreateServiceRequestDTO): Promise<ServiceDTO>;
+    execute(data: ICreateServiceRequestDTO): Promise<IServiceDTO>;
 }
 export interface IEditService {
-    execute(id: string, data: Partial<IService>): Promise<ServiceDTO | null>;
+    execute(id: string, data: Partial<IService>): Promise<IServiceDTO | null>;
 }
 export interface IDeleteService {
     execute(id: string): Promise<boolean>;
 }
 export interface IGetAllServices {
-    execute(query: QueryOptions & ServiceFilters): Promise<{
-        services: ServiceDTO[];
+    execute(query: IQueryOptions & IServiceFilters): Promise<{
+        services: IServiceDTO[];
         totalCount: number;
         totalPages: number;
         currentPage: number;
     }>;
 }
 export interface IBookService {
-    execute(data: CreateBookingRequestDTO): Promise<BookingDTO>;
+    execute(data: ICreateBookingRequestDTO): Promise<IBookingDTO>;
 }
 export interface IGetUserBookings {
-    execute(userId: string): Promise<BookingDTO[]>;
+    execute(userId: string): Promise<IBookingDTO[]>;
 }
 export interface IGetAdminBookings {
-    execute(): Promise<BookingDTO[]>;
+    execute(): Promise<IBookingDTO[]>;
 }
 //# sourceMappingURL=IUseCases.d.ts.map

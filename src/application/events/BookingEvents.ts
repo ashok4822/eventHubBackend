@@ -6,7 +6,7 @@ export const BOOKING_EVENTS = {
   CREATED: 'booking:created',
 };
 
-export interface BookingCreatedEventData {
+export interface IBookingCreatedEventData {
   booking: IBooking;
   user: IUser;
   service: IService;

@@ -11,48 +11,33 @@ class BookingController {
         this.getUserBookingsUseCase = getUserBookingsUseCase;
         this.getAdminBookingsUseCase = getAdminBookingsUseCase;
     }
-    async book(req, res, next) {
-        try {
-            const { serviceId, startDate, endDate } = req.body;
-            const userId = req.user.id;
-            const booking = await this.bookServiceUseCase.execute({
-                userId,
-                serviceId,
-                startDate,
-                endDate,
-            });
-            res.status(statusCodes_1.STATUS_CODES.CREATED).json({
-                success: true,
-                data: booking
-            });
-        }
-        catch (error) {
-            next(error);
-        }
+    async book(req, res, _next) {
+        const { serviceId, startDate, endDate } = req.body;
+        const userId = req.user.id;
+        const booking = await this.bookServiceUseCase.execute({
+            userId,
+            serviceId,
+            startDate,
+            endDate,
+        });
+        res.status(statusCodes_1.STATUS_CODES.CREATED).json({
+            success: true,
+            data: booking
+        });
     }
-    async getUserBookings(req, res, next) {
-        try {
-            const bookings = await this.getUserBookingsUseCase.execute(req.user.id);
-            res.json({
-                success: true,
-                data: bookings
-            });
-        }
-        catch (error) {
-            next(error);
-        }
+    async getUserBookings(req, res, _next) {
+        const bookings = await this.getUserBookingsUseCase.execute(req.user.id);
+        res.json({
+            success: true,
+            data: bookings
+        });
     }
-    async getAllBookings(req, res, next) {
-        try {
-            const bookings = await this.getAdminBookingsUseCase.execute();
-            res.json({
-                success: true,
-                data: bookings
-            });
-        }
-        catch (error) {
-            next(error);
-        }
+    async getAllBookings(req, res, _next) {
+        const bookings = await this.getAdminBookingsUseCase.execute();
+        res.json({
+            success: true,
+            data: bookings
+        });
     }
 }
 exports.BookingController = BookingController;

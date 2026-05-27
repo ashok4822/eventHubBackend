@@ -1,5 +1,5 @@
-import { TokenService } from '../../ports/TokenService';
-import { UserRepository } from '../../ports/UserRepository';
+import { ITokenService } from '../../ports/ITokenService';
+import { IUserRepository } from '../../ports/UserRepository';
 import { IRefreshToken } from '../../ports/IUseCases';
 /**
  * Use case for refreshing access tokens.
@@ -7,7 +7,7 @@ import { IRefreshToken } from '../../ports/IUseCases';
 export declare class RefreshToken implements IRefreshToken {
     private userRepository;
     private tokenService;
-    constructor(userRepository: UserRepository, tokenService: TokenService);
+    constructor(userRepository: IUserRepository, tokenService: ITokenService);
     execute(refreshToken: string): Promise<{
         accessToken: string;
     }>;

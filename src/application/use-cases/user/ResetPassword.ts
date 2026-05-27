@@ -1,5 +1,5 @@
-import { UserRepository } from '../../ports/UserRepository';
-import { PasswordHasher } from '../../ports/PasswordHasher';
+import { IUserRepository } from '../../ports/UserRepository';
+import { IPasswordHasher } from '../../ports/IPasswordHasher';
 import { IResetPassword } from '../../ports/IUseCases';
 import { BadRequestError } from '../../errors/AppErrors';
 
@@ -8,8 +8,8 @@ import { BadRequestError } from '../../errors/AppErrors';
  */
 export class ResetPassword implements IResetPassword {
   constructor(
-    private userRepository: UserRepository,
-    private passwordHasher: PasswordHasher
+    private userRepository: IUserRepository,
+    private passwordHasher: IPasswordHasher
   ) {}
 
   async execute(token: string, password: string): Promise<void> {

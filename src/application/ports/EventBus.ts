@@ -1,4 +1,4 @@
-export interface EventBus {
-  emit(eventName: string, data: any): void;
-  on(eventName: string, handler: (data: any) => void): void;
+export interface IEventBus {
+  emit(eventName: string, data: unknown): void;
+  on(eventName: string, handler: (data: unknown) => void): void;
 }

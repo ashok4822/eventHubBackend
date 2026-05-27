@@ -1,22 +1,22 @@
 import { EventEmitter } from 'events';
-import { EventBus } from '../../application/ports/EventBus';
+import { IEventBus } from '../../application/ports/EventBus';
 
 /**
- * Concrete implementation of EventBus using Node.js EventEmitter.
+ * Concrete implementation of IEventBus using Node.js EventEmitter.
  * Suitable for in-process event handling.
  */
-export class EventEmitterBus implements EventBus {
+export class EventEmitterBus implements IEventBus {
   private emitter: EventEmitter;
 
   constructor() {
     this.emitter = new EventEmitter();
   }
 
-  emit(eventName: string, data: any): void {
+  emit(eventName: string, data: unknown): void {
     this.emitter.emit(eventName, data);
   }
 
-  on(eventName: string, handler: (data: any) => void): void {
+  on(eventName: string, handler: (data: unknown) => void): void {
     this.emitter.on(eventName, handler);
   }
 }

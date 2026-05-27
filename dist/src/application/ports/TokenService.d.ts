@@ -1,4 +1,4 @@
-export interface TokenPayload {
+export interface ITokenPayload {
     id: string;
     role?: string;
     [key: string]: unknown;
@@ -7,9 +7,9 @@ export interface TokenPayload {
  * Abstract interface for token generation and verification.
  */
 export declare abstract class TokenService {
-    abstract generateAccessToken(payload: TokenPayload): string;
-    abstract generateRefreshToken(payload: TokenPayload): string;
-    abstract verifyAccessToken(token: string): TokenPayload;
-    abstract verifyRefreshToken(token: string): TokenPayload;
+    abstract generateAccessToken(payload: ITokenPayload): string;
+    abstract generateRefreshToken(payload: ITokenPayload): string;
+    abstract verifyAccessToken(token: string): ITokenPayload;
+    abstract verifyRefreshToken(token: string): ITokenPayload;
 }
 //# sourceMappingURL=TokenService.d.ts.map

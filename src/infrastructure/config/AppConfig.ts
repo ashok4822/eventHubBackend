@@ -23,6 +23,7 @@ export const AppConfig: IAppConfig = {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
+    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173'
   },
   FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173'
 };

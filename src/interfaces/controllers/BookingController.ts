@@ -1,4 +1,4 @@
-import { HttpRequest, HttpResponse, HttpNext } from '../types/HttpTypes';
+import { IHttpRequest, IHttpResponse, HttpNext } from '../types/HttpTypes';
 import { STATUS_CODES } from '../constants/statusCodes';
 import { IBookService, IGetUserBookings, IGetAdminBookings } from '../../application/ports/IUseCases';
 
@@ -12,7 +12,7 @@ export class BookingController {
     private getAdminBookingsUseCase: IGetAdminBookings
   ) {}
 
-  async book(req: HttpRequest, res: HttpResponse, next: HttpNext): Promise<void> {
+  async book(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const { serviceId, startDate, endDate } = req.body;
     const userId = req.user!.id;
 
@@ -28,7 +28,7 @@ export class BookingController {
     });
   }
 
-  async getUserBookings(req: HttpRequest, res: HttpResponse, next: HttpNext): Promise<void> {
+  async getUserBookings(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const bookings = await this.getUserBookingsUseCase.execute(req.user!.id);
     res.json({
       success: true,
@@ -36,7 +36,7 @@ export class BookingController {
     });
   }
 
-  async getAllBookings(req: HttpRequest, res: HttpResponse, next: HttpNext): Promise<void> {
+  async getAllBookings(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const bookings = await this.getAdminBookingsUseCase.execute();
     res.json({
       success: true,

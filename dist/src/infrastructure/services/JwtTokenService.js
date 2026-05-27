@@ -5,11 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JwtTokenService = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const TokenService_1 = require("../../application/ports/TokenService");
+const ITokenService_1 = require("../../application/ports/ITokenService");
 /**
  * Concrete implementation of TokenService using jsonwebtoken.
  */
-class JwtTokenService extends TokenService_1.TokenService {
+class JwtTokenService extends ITokenService_1.ITokenService {
     constructor(accessSecret, refreshSecret) {
         super();
         this.accessSecret = accessSecret;

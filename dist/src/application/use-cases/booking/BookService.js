@@ -29,7 +29,8 @@ class BookService {
             Booking_1.default.validateDates(start, end);
         }
         catch (error) {
-            throw new AppErrors_1.BadRequestError(error.message);
+            const message = error instanceof Error ? error.message : 'Invalid dates';
+            throw new AppErrors_1.BadRequestError(message);
         }
         const [user, service] = await Promise.all([
             this.userRepository.findById(userId),

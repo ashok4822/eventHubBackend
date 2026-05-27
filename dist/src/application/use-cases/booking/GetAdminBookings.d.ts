@@ -1,12 +1,12 @@
-import { BookingRepository } from '../../ports/BookingRepository';
+import { IBookingRepository } from '../../ports/BookingRepository';
 import { IGetAdminBookings } from '../../ports/IUseCases';
-import { BookingDTO } from '../../dtos/BookingDTO';
+import { IBookingDTO } from '../../dtos/BookingDTO';
 /**
  * Use case for retrieving all bookings across the platform.
  */
 export declare class GetAdminBookings implements IGetAdminBookings {
     private bookingRepository;
-    constructor(bookingRepository: BookingRepository);
-    execute(): Promise<BookingDTO[]>;
+    constructor(bookingRepository: IBookingRepository);
+    execute(): Promise<IBookingDTO[]>;
 }
 //# sourceMappingURL=GetAdminBookings.d.ts.map

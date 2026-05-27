@@ -5,10 +5,9 @@ exports.ConflictError = exports.NotFoundError = exports.ForbiddenError = exports
  * Base class for all application-specific errors.
  */
 class AppError extends Error {
-    constructor(message, statusCode = 500) {
+    constructor(message) {
         super(message);
         this.message = message;
-        this.statusCode = statusCode;
         this.name = this.constructor.name;
         Error.captureStackTrace(this, this.constructor);
     }
@@ -19,7 +18,7 @@ exports.AppError = AppError;
  */
 class BadRequestError extends AppError {
     constructor(message = 'Bad Request') {
-        super(message, 400);
+        super(message);
     }
 }
 exports.BadRequestError = BadRequestError;
@@ -28,7 +27,7 @@ exports.BadRequestError = BadRequestError;
  */
 class UnauthorizedError extends AppError {
     constructor(message = 'Unauthorized') {
-        super(message, 401);
+        super(message);
     }
 }
 exports.UnauthorizedError = UnauthorizedError;
@@ -37,7 +36,7 @@ exports.UnauthorizedError = UnauthorizedError;
  */
 class ForbiddenError extends AppError {
     constructor(message = 'Forbidden') {
-        super(message, 403);
+        super(message);
     }
 }
 exports.ForbiddenError = ForbiddenError;
@@ -46,7 +45,7 @@ exports.ForbiddenError = ForbiddenError;
  */
 class NotFoundError extends AppError {
     constructor(message = 'Resource not found') {
-        super(message, 404);
+        super(message);
     }
 }
 exports.NotFoundError = NotFoundError;
@@ -55,7 +54,7 @@ exports.NotFoundError = NotFoundError;
  */
 class ConflictError extends AppError {
     constructor(message) {
-        super(message, 409);
+        super(message);
     }
 }
 exports.ConflictError = ConflictError;

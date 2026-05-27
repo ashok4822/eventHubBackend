@@ -5,11 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BcryptPasswordHasher = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const PasswordHasher_1 = require("../../application/ports/PasswordHasher");
+const IPasswordHasher_1 = require("../../application/ports/IPasswordHasher");
 /**
  * Concrete implementation of PasswordHasher using bcryptjs.
  */
-class BcryptPasswordHasher extends PasswordHasher_1.PasswordHasher {
+class BcryptPasswordHasher extends IPasswordHasher_1.IPasswordHasher {
     async hash(password) {
         const saltRounds = 10;
         return await bcryptjs_1.default.hash(password, saltRounds);

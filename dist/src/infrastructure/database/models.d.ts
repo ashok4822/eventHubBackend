@@ -5,6 +5,8 @@ export interface IUserDocument extends Document {
     email: string;
     password: string;
     role: 'user' | 'admin';
+    resetPasswordToken?: string;
+    resetPasswordExpires?: Date;
     createdAt: Date;
     updatedAt: Date;
 }

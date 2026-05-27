@@ -1,14 +1,14 @@
-import { TokenService, TokenPayload } from '../../application/ports/TokenService';
+import { ITokenService, ITokenPayload } from '../../application/ports/ITokenService';
 /**
  * Concrete implementation of TokenService using jsonwebtoken.
  */
-export declare class JwtTokenService extends TokenService {
+export declare class JwtTokenService extends ITokenService {
     private accessSecret;
     private refreshSecret;
     constructor(accessSecret: string, refreshSecret: string);
-    generateAccessToken(payload: TokenPayload): string;
-    generateRefreshToken(payload: TokenPayload): string;
-    verifyAccessToken(token: string): TokenPayload;
-    verifyRefreshToken(token: string): TokenPayload;
+    generateAccessToken(payload: ITokenPayload): string;
+    generateRefreshToken(payload: ITokenPayload): string;
+    verifyAccessToken(token: string): ITokenPayload;
+    verifyRefreshToken(token: string): ITokenPayload;
 }
 //# sourceMappingURL=JwtTokenService.d.ts.map

@@ -9,8 +9,10 @@ exports.globalLimiter = (0, express_rate_limit_1.rateLimit)({
     standardHeaders: true,
     legacyHeaders: false,
     handler: (req, res, next, options) => {
-        res.status(options.statusCode).json({
-            message: options.message?.message || options.message,
+        const opts = options;
+        const message = typeof opts.message === 'object' ? opts.message.message : opts.message;
+        res.status(opts.statusCode).json({
+            message: message,
         });
     },
 });
@@ -21,8 +23,10 @@ exports.authLimiter = (0, express_rate_limit_1.rateLimit)({
     standardHeaders: true,
     legacyHeaders: false,
     handler: (req, res, next, options) => {
-        res.status(options.statusCode).json({
-            message: options.message?.message || options.message,
+        const opts = options;
+        const message = typeof opts.message === 'object' ? opts.message.message : opts.message;
+        res.status(opts.statusCode).json({
+            message: message,
         });
     },
 });

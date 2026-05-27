@@ -12,7 +12,7 @@ class EditService {
     }
     async execute(id, serviceData) {
         if (serviceData.pricePerDay !== undefined && serviceData.pricePerDay <= 0) {
-            throw new AppErrors_1.BadRequestError('Price per day must be a positive number');
+            throw new AppErrors_1.BadRequestError("Price per day must be a positive number");
         }
         const service = await this.serviceRepository.update(id, serviceData);
         return service ? AppMapper_1.AppMapper.toServiceDTO(service) : null;

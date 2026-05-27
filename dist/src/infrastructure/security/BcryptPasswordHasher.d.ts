@@ -1,8 +1,8 @@
-import { PasswordHasher } from '../../application/ports/PasswordHasher';
+import { IPasswordHasher } from '../../application/ports/IPasswordHasher';
 /**
  * Concrete implementation of PasswordHasher using bcryptjs.
  */
-export declare class BcryptPasswordHasher extends PasswordHasher {
+export declare class BcryptPasswordHasher extends IPasswordHasher {
     hash(password: string): Promise<string>;
     compare(password: string, hash: string): Promise<boolean>;
 }

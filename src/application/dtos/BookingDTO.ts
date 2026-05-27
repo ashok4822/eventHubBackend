@@ -1,19 +1,19 @@
 import { BookingStatus } from '../../domain/entities/Booking';
-import { UserDTO } from './UserDTO';
-import { ServiceDTO } from './ServiceDTO';
+import { IUserDTO } from './UserDTO';
+import { IServiceDTO } from './ServiceDTO';
 
-export interface BookingDTO {
+export interface IBookingDTO {
   id: string;
   _id?: string;
-  userId: string | UserDTO;
-  serviceId: string | ServiceDTO;
+  userId: string | IUserDTO;
+  serviceId: string | IServiceDTO;
   startDate: Date;
   endDate: Date;
   totalPrice: number;
   status?: BookingStatus;
 }
 
-export interface CreateBookingRequestDTO {
+export interface ICreateBookingRequestDTO {
   userId: string;
   serviceId: string;
   startDate: string;

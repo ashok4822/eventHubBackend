@@ -1,4 +1,4 @@
-import { HttpRequest, HttpResponse, HttpNext } from '../types/HttpTypes';
+import { IHttpRequest, IHttpResponse, HttpNext } from '../types/HttpTypes';
 import { BadRequestError } from '../../application/errors/AppErrors';
 import { STATUS_CODES } from '../constants/statusCodes';
 import { MESSAGES } from '../constants/messages';
@@ -15,7 +15,7 @@ export class ServiceController {
     private getAllServicesUseCase: IGetAllServices
   ) {}
 
-  async addService(req: HttpRequest, res: HttpResponse, next: HttpNext): Promise<void> {
+  async addService(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const { title, description, pricePerDay, location, contactDetails, category, availabilityDates } = req.body;
     const service = await this.addServiceUseCase.execute({ 
       title, description, pricePerDay, location, contactDetails, category, availabilityDates 
@@ -26,7 +26,7 @@ export class ServiceController {
     });
   }
 
-  async editService(req: HttpRequest, res: HttpResponse, next: HttpNext): Promise<void> {
+  async editService(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const { id } = req.params;
     const { title, description, pricePerDay, location, contactDetails, category, availabilityDates } = req.body;
     const service = await this.editServiceUseCase.execute(id as string, { 
@@ -38,7 +38,7 @@ export class ServiceController {
     });
   }
 
-  async deleteService(req: HttpRequest, res: HttpResponse, next: HttpNext): Promise<void> {
+  async deleteService(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const success = await this.deleteServiceUseCase.execute(req.params.id as string);
     if (success) {
       res.json({
@@ -50,7 +50,7 @@ export class ServiceController {
     }
   }
 
-  async getAllServices(req: HttpRequest, res: HttpResponse, next: HttpNext): Promise<void> {
+  async getAllServices(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const services = await this.getAllServicesUseCase.execute(req.query);
     res.json({
       success: true,

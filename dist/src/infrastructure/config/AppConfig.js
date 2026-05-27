@@ -16,7 +16,7 @@ exports.AppConfig = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: (process.env.NODE_ENV === 'production' ? 'none' : 'lax'),
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: Number(process.env.COOKIE_MAX_AGE) || 7 * 24 * 60 * 60 * 1000,
     },
     EMAIL: {
         service: process.env.EMAIL_SERVICE || 'gmail',
@@ -24,6 +24,7 @@ exports.AppConfig = {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS,
         },
+        frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173'
     },
     FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173'
 };

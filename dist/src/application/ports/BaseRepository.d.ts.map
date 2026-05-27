@@ -1,0 +1,1 @@
+{"version":3,"file":"BaseRepository.d.ts","sourceRoot":"","sources":["../../../../src/application/ports/BaseRepository.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,eAAe,CAAC,CAAC;IAChC,QAAQ,CAAC,EAAE,EAAE,MAAM,GAAG,OAAO,CAAC,CAAC,GAAG,IAAI,CAAC,CAAC;IACxC,IAAI,CAAC,IAAI,EAAE,CAAC,GAAG,OAAO,CAAC,CAAC,CAAC,CAAC;IAC1B,MAAM,CAAC,EAAE,EAAE,MAAM,GAAG,OAAO,CAAC,OAAO,CAAC,CAAC;CACtC"}

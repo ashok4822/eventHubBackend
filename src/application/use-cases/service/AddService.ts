@@ -1,17 +1,17 @@
-import { ServiceRepository } from '../../ports/ServiceRepository';
+import { IServiceRepository } from '../../ports/ServiceRepository';
 import { IService } from '../../../domain/entities/Service';
 import { BadRequestError } from '../../errors/AppErrors';
 import { IAddService } from '../../ports/IUseCases';
-import { ServiceDTO } from '../../dtos/ServiceDTO';
+import { IServiceDTO } from '../../dtos/ServiceDTO';
 import { AppMapper } from '../../mappers/AppMapper';
 
 /**
  * Use case for adding a new service.
  */
 export class AddService implements IAddService {
-  constructor(private serviceRepository: ServiceRepository) {}
+  constructor(private serviceRepository: IServiceRepository) {}
 
-  async execute(serviceData: Parameters<IAddService['execute']>[0]): Promise<ServiceDTO> {
+  async execute(serviceData: Parameters<IAddService['execute']>[0]): Promise<IServiceDTO> {
     if (serviceData.pricePerDay <= 0) {
       throw new BadRequestError('Price per day must be a positive number');
     }

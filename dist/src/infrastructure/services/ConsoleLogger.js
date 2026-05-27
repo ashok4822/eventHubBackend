@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConsoleLogger = void 0;
-const Logger_1 = require("../../application/ports/Logger");
+const ILogger_1 = require("../../application/ports/ILogger");
 /**
  * Concrete implementation of Logger port using console.
  */
-class ConsoleLogger extends Logger_1.Logger {
+class ConsoleLogger extends ILogger_1.ILogger {
     info(message, context) {
         console.log(`[INFO] ${message}`, context ? context : '');
     }

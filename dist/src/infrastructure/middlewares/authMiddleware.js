@@ -24,7 +24,7 @@ class AuthMiddleware {
                     };
                     return next();
                 }
-                catch (error) {
+                catch (_error) {
                     throw new AppErrors_1.UnauthorizedError('Not authorized, token failed');
                 }
             }
@@ -35,7 +35,7 @@ class AuthMiddleware {
         /**
          * Restricts access to admin users only.
          */
-        this.admin = (req, res, next) => {
+        this.admin = (req, _res, next) => {
             if (req.user && req.user.role === 'admin') {
                 next();
             }

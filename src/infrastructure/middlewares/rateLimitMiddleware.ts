@@ -7,9 +7,11 @@ export const globalLimiter = rateLimit({
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (req: Request, res: Response, next: NextFunction, options: any) => {
-    res.status(options.statusCode).json({
-      message: options.message?.message || options.message,
+  handler: (req: Request, res: Response, next: NextFunction, options: Record<string, unknown>) => {
+    const opts = options as unknown as { statusCode: number; message: string | { message: string } };
+    const message = typeof opts.message === 'object' ? opts.message.message : opts.message;
+    res.status(opts.statusCode).json({
+      message: message,
     });
   },
 });
@@ -20,9 +22,11 @@ export const authLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (req: Request, res: Response, next: NextFunction, options: any) => {
-    res.status(options.statusCode).json({
-      message: options.message?.message || options.message,
+  handler: (req: Request, res: Response, next: NextFunction, options: Record<string, unknown>) => {
+    const opts = options as unknown as { statusCode: number; message: string | { message: string } };
+    const message = typeof opts.message === 'object' ? opts.message.message : opts.message;
+    res.status(opts.statusCode).json({
+      message: message,
     });
   },
 });

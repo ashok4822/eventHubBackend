@@ -1,11 +1,11 @@
-export interface PaginationOptions {
+export interface IPaginationOptions {
   page?: number;
   limit?: number;
 }
 
-export interface SortOptions {
+export interface ISortOptions {
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
 }
 
-export interface QueryOptions extends PaginationOptions, SortOptions {}
+export interface IQueryOptions extends IPaginationOptions, ISortOptions {}

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventEmitterBus = void 0;
 const events_1 = require("events");
 /**
- * Concrete implementation of EventBus using Node.js EventEmitter.
+ * Concrete implementation of IEventBus using Node.js EventEmitter.
  * Suitable for in-process event handling.
  */
 class EventEmitterBus {
