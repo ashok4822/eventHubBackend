@@ -5,8 +5,8 @@ import { ITokenService } from '../../application/ports/ITokenService';
  * Follows DIP by depending on TokenService port.
  */
 export declare class AuthMiddleware {
-    private tokenService;
-    constructor(tokenService: ITokenService);
+    private _tokenService;
+    constructor(_tokenService: ITokenService);
     /**
      * Protects routes by verifying the JWT access token.
      */

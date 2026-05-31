@@ -1,5 +1,5 @@
 import { UserModel, IUserDocument } from '../database/models';
-import { IUserRepository } from '../../application/ports/UserRepository';
+import { IUserRepository } from '../../application/ports/IUserRepository';
 import { IUser } from '../../domain/entities/User';
 import { UserMapper } from './Mappers';
 import { BaseRepository } from './BaseRepository';

@@ -6,11 +6,11 @@ const AppMapper_1 = require("../../mappers/AppMapper");
  * Use case for retrieving all bookings across the platform.
  */
 class GetAdminBookings {
-    constructor(bookingRepository) {
-        this.bookingRepository = bookingRepository;
+    constructor(_bookingRepository) {
+        this._bookingRepository = _bookingRepository;
     }
     async execute() {
-        const bookings = await this.bookingRepository.findAll();
+        const bookings = await this._bookingRepository.findAll();
         return bookings.map(booking => AppMapper_1.AppMapper.toBookingDTO(booking));
     }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IApiResponse } from './ApiResponse';
+import { IApiResponse } from './IApiResponse';
 
 export interface IHttpRequest {
   body: any;

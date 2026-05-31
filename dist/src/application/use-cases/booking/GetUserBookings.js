@@ -6,11 +6,11 @@ const AppMapper_1 = require("../../mappers/AppMapper");
  * Use case for retrieving bookings for a specific user.
  */
 class GetUserBookings {
-    constructor(bookingRepository) {
-        this.bookingRepository = bookingRepository;
+    constructor(_bookingRepository) {
+        this._bookingRepository = _bookingRepository;
     }
     async execute(userId) {
-        const bookings = await this.bookingRepository.findByUserId(userId);
+        const bookings = await this._bookingRepository.findByUserId(userId);
         return bookings.map(booking => AppMapper_1.AppMapper.toBookingDTO(booking));
     }
 }

@@ -1,4 +1,4 @@
-import { IHttpRequest, IHttpResponse, HttpNext } from '../types/HttpTypes';
+import { IHttpRequest, IHttpResponse, HttpNext } from '../types/IHttpTypes';
 import { UnauthorizedError } from '../../application/errors/AppErrors';
 import { STATUS_CODES } from '../constants/statusCodes';
 import { MESSAGES } from '../constants/messages';
@@ -16,18 +16,18 @@ import {
  */
 export class AuthController {
   constructor(
-    private registerUseCase: IRegisterUser,
-    private loginUseCase: ILoginUser,
-    private refreshTokenUseCase: IRefreshToken,
-    private requestPasswordResetUseCase: IRequestPasswordReset,
-    private resetPasswordUseCase: IResetPassword,
-    private config: ICookieSettings,
+    private _registerUseCase: IRegisterUser,
+    private _loginUseCase: ILoginUser,
+    private _refreshTokenUseCase: IRefreshToken,
+    private _requestPasswordResetUseCase: IRequestPasswordReset,
+    private _resetPasswordUseCase: IResetPassword,
+    private _config: ICookieSettings,
   ) { }
 
 
   async register(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const { name, email, password, role } = req.body;
-    const user = await this.registerUseCase.execute({ name, email, password, role });
+    const user = await this._registerUseCase.execute({ name, email, password, role });
     res.status(STATUS_CODES.CREATED).json({
       success: true,
       message: MESSAGES.AUTH.REGISTERED,
@@ -37,10 +37,10 @@ export class AuthController {
 
   async login(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const { email, password } = req.body;
-    const { accessToken, refreshToken, user } = await this.loginUseCase.execute({ email, password });
+    const { accessToken, refreshToken, user } = await this._loginUseCase.execute({ email, password });
 
     if (refreshToken) {
-      res.cookie('refreshToken', refreshToken, this.config);
+      res.cookie('refreshToken', refreshToken, this._config);
     }
 
     res.json({ 
@@ -57,7 +57,7 @@ export class AuthController {
       throw new UnauthorizedError(MESSAGES.AUTH.REFRESH_TOKEN_MISSING);
     }
 
-    const { accessToken } = await this.refreshTokenUseCase.execute(refreshToken);
+    const { accessToken } = await this._refreshTokenUseCase.execute(refreshToken);
     res.json({ 
       success: true, 
       data: { accessToken } 
@@ -66,9 +66,9 @@ export class AuthController {
 
   async logout(req: IHttpRequest, res: IHttpResponse): Promise<void> {
     res.clearCookie('refreshToken', {
-      httpOnly: this.config.httpOnly,
-      secure: this.config.secure,
-      sameSite: this.config.sameSite,
+      httpOnly: this._config.httpOnly,
+      secure: this._config.secure,
+      sameSite: this._config.sameSite,
     });
     res.json({ 
       success: true, 
@@ -78,7 +78,7 @@ export class AuthController {
 
   async forgotPassword(req: IHttpRequest, res: IHttpResponse): Promise<void> {
     const { email } = req.body;
-    await this.requestPasswordResetUseCase.execute(email);
+    await this._requestPasswordResetUseCase.execute(email);
     res.json({
       success: true,
       message: 'If an account exists with that email, a password reset link has been sent.'
@@ -88,7 +88,7 @@ export class AuthController {
   async resetPassword(req: IHttpRequest, res: IHttpResponse): Promise<void> {
     const { token } = req.params;
     const { password } = req.body;
-    await this.resetPasswordUseCase.execute(token, password);
+    await this._resetPasswordUseCase.execute(token, password);
     res.json({
       success: true,
       message: 'Password has been reset successfully.'

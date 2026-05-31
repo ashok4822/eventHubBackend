@@ -66,6 +66,13 @@ const bookingSchema = new mongoose_1.Schema({
     totalPrice: { type: Number, required: true },
     status: { type: String, enum: ['confirmed', 'cancelled'], default: 'confirmed' },
 }, { timestamps: true });
+/**
+ * Compound index to prevent duplicate confirmed bookings for the same service
+ * and exact date range.  This is the final atomic guard against race conditions
+ * when two requests pass the application-layer overlap check simultaneously.
+ * Only applies to 'confirmed' bookings (sparse: true allows multiple cancelled ones).
+ */
+bookingSchema.index({ serviceId: 1, startDate: 1, endDate: 1 }, { unique: true, partialFilterExpression: { status: 'confirmed' } });
 // ---- Models ----
 exports.UserModel = mongoose_1.default.model('User', userSchema);
 exports.ServiceModel = mongoose_1.default.model('Service', serviceSchema);

@@ -1,17 +1,17 @@
-import { IHttpRequest, IHttpResponse, HttpNext } from '../types/HttpTypes';
+import { IHttpRequest, IHttpResponse, HttpNext } from '../types/IHttpTypes';
 import { ICookieSettings } from '../../application/ports/IAppConfig';
 import { IRegisterUser, ILoginUser, IRefreshToken, IRequestPasswordReset, IResetPassword } from '../../application/ports/IUseCases';
 /**
  * Controller for user authentication and authorization.
  */
 export declare class AuthController {
-    private registerUseCase;
-    private loginUseCase;
-    private refreshTokenUseCase;
-    private requestPasswordResetUseCase;
-    private resetPasswordUseCase;
-    private config;
-    constructor(registerUseCase: IRegisterUser, loginUseCase: ILoginUser, refreshTokenUseCase: IRefreshToken, requestPasswordResetUseCase: IRequestPasswordReset, resetPasswordUseCase: IResetPassword, config: ICookieSettings);
+    private _registerUseCase;
+    private _loginUseCase;
+    private _refreshTokenUseCase;
+    private _requestPasswordResetUseCase;
+    private _resetPasswordUseCase;
+    private _config;
+    constructor(_registerUseCase: IRegisterUser, _loginUseCase: ILoginUser, _refreshTokenUseCase: IRefreshToken, _requestPasswordResetUseCase: IRequestPasswordReset, _resetPasswordUseCase: IResetPassword, _config: ICookieSettings);
     register(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void>;
     login(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void>;
     refresh(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void>;

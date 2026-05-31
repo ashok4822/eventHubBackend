@@ -6,26 +6,26 @@ import { ITokenService, ITokenPayload } from '../../application/ports/ITokenServ
  */
 export class JwtTokenService extends ITokenService {
   constructor(
-    private accessSecret: string,
-    private refreshSecret: string
+    private _accessSecret: string,
+    private _refreshSecret: string
   ) {
     super();
   }
 
   generateAccessToken(payload: ITokenPayload): string {
-    return jwt.sign(payload as object, this.accessSecret, { expiresIn: '15m' });
+    return jwt.sign(payload as object, this._accessSecret, { expiresIn: '15m' });
   }
 
   generateRefreshToken(payload: ITokenPayload): string {
-    return jwt.sign(payload as object, this.refreshSecret, { expiresIn: '7d' });
+    return jwt.sign(payload as object, this._refreshSecret, { expiresIn: '7d' });
   }
 
 
   verifyAccessToken(token: string): ITokenPayload {
-    return jwt.verify(token, this.accessSecret) as ITokenPayload;
+    return jwt.verify(token, this._accessSecret) as ITokenPayload;
   }
 
   verifyRefreshToken(token: string): ITokenPayload {
-    return jwt.verify(token, this.refreshSecret) as ITokenPayload;
+    return jwt.verify(token, this._refreshSecret) as ITokenPayload;
   }
 }

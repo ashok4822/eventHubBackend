@@ -6,8 +6,8 @@ const AppMapper_1 = require("../../mappers/AppMapper");
  * Use case for retrieving all services.
  */
 class GetAllServices {
-    constructor(serviceRepository) {
-        this.serviceRepository = serviceRepository;
+    constructor(_serviceRepository) {
+        this._serviceRepository = _serviceRepository;
     }
     async execute(query) {
         const { page, limit, sortBy, sortOrder, ...filters } = query;
@@ -17,7 +17,7 @@ class GetAllServices {
             sortBy,
             sortOrder: sortOrder
         };
-        const result = await this.serviceRepository.findAll(filters, options);
+        const result = await this._serviceRepository.findAll(filters, options);
         return {
             ...result,
             services: result.services.map(service => AppMapper_1.AppMapper.toServiceDTO(service))

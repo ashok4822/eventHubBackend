@@ -1,5 +1,5 @@
 import { Model, Document } from 'mongoose';
-import { IBaseRepository } from '../../application/ports/BaseRepository';
+import { IBaseRepository } from '../../application/ports/IBaseRepository';
 /**
  * Generic base repository for Mongoose implementations.
  * @template TDomain The domain entity type.

@@ -1,15 +1,15 @@
-import { IServiceRepository } from "../../ports/ServiceRepository";
+import { IServiceRepository } from "../../ports/IServiceRepository";
 import { IService } from "../../../domain/entities/Service";
 import { BadRequestError } from "../../errors/AppErrors";
 import { IEditService } from "../../ports/IUseCases";
-import { IServiceDTO } from "../../dtos/ServiceDTO";
+import { IServiceDTO } from "../../dtos/IServiceDTO";
 import { AppMapper } from "../../mappers/AppMapper";
 
 /**
  * Use case for editing an existing service.
  */
 export class EditService implements IEditService {
-  constructor(private serviceRepository: IServiceRepository) {}
+  constructor(private _serviceRepository: IServiceRepository) {}
 
   async execute(
     id: string,
@@ -18,7 +18,7 @@ export class EditService implements IEditService {
     if (serviceData.pricePerDay !== undefined && serviceData.pricePerDay <= 0) {
       throw new BadRequestError("Price per day must be a positive number");
     }
-    const service = await this.serviceRepository.update(
+    const service = await this._serviceRepository.update(
       id,
       serviceData as Partial<IService>,
     );

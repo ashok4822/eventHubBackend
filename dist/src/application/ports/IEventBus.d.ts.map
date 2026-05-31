@@ -1,0 +1,1 @@
+{"version":3,"file":"IEventBus.d.ts","sourceRoot":"","sources":["../../../../src/application/ports/IEventBus.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,SAAS;IACxB,IAAI,CAAC,SAAS,EAAE,MAAM,EAAE,IAAI,EAAE,OAAO,GAAG,IAAI,CAAC;IAC7C,EAAE,CAAC,SAAS,EAAE,MAAM,EAAE,OAAO,EAAE,CAAC,IAAI,EAAE,OAAO,KAAK,IAAI,GAAG,IAAI,CAAC;CAC/D"}

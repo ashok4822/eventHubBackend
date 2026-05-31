@@ -8,15 +8,15 @@ const messages_1 = require("../constants/messages");
  * Controller for managing services.
  */
 class ServiceController {
-    constructor(addServiceUseCase, editServiceUseCase, deleteServiceUseCase, getAllServicesUseCase) {
-        this.addServiceUseCase = addServiceUseCase;
-        this.editServiceUseCase = editServiceUseCase;
-        this.deleteServiceUseCase = deleteServiceUseCase;
-        this.getAllServicesUseCase = getAllServicesUseCase;
+    constructor(_addServiceUseCase, _editServiceUseCase, _deleteServiceUseCase, _getAllServicesUseCase) {
+        this._addServiceUseCase = _addServiceUseCase;
+        this._editServiceUseCase = _editServiceUseCase;
+        this._deleteServiceUseCase = _deleteServiceUseCase;
+        this._getAllServicesUseCase = _getAllServicesUseCase;
     }
     async addService(req, res, _next) {
         const { title, description, pricePerDay, location, contactDetails, category, availabilityDates } = req.body;
-        const service = await this.addServiceUseCase.execute({
+        const service = await this._addServiceUseCase.execute({
             title, description, pricePerDay, location, contactDetails, category, availabilityDates
         });
         res.status(statusCodes_1.STATUS_CODES.CREATED).json({
@@ -27,7 +27,7 @@ class ServiceController {
     async editService(req, res, _next) {
         const { id } = req.params;
         const { title, description, pricePerDay, location, contactDetails, category, availabilityDates } = req.body;
-        const service = await this.editServiceUseCase.execute(id, {
+        const service = await this._editServiceUseCase.execute(id, {
             title, description, pricePerDay, location, contactDetails, category, availabilityDates
         });
         res.json({
@@ -36,7 +36,7 @@ class ServiceController {
         });
     }
     async deleteService(req, res, _next) {
-        const success = await this.deleteServiceUseCase.execute(req.params.id);
+        const success = await this._deleteServiceUseCase.execute(req.params.id);
         if (success) {
             res.json({
                 success: true,
@@ -48,7 +48,7 @@ class ServiceController {
         }
     }
     async getAllServices(req, res, _next) {
-        const services = await this.getAllServicesUseCase.execute(req.query);
+        const services = await this._getAllServicesUseCase.execute(req.query);
         res.json({
             success: true,
             data: services

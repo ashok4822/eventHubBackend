@@ -1,12 +1,12 @@
-import { IBookingRepository } from '../../ports/BookingRepository';
-import { IServiceRepository } from '../../ports/ServiceRepository';
-import { IUserRepository } from '../../ports/UserRepository';
-import { IEventBus } from '../../ports/EventBus';
+import { IBookingRepository } from '../../ports/IBookingRepository';
+import { IServiceRepository } from '../../ports/IServiceRepository';
+import { IUserRepository } from '../../ports/IUserRepository';
+import { IEventBus } from '../../ports/IEventBus';
 import Booking from '../../../domain/entities/Booking';
-import { BadRequestError, NotFoundError } from '../../errors/AppErrors';
+import { BadRequestError, ConflictError, NotFoundError } from '../../errors/AppErrors';
 import { BOOKING_EVENTS, IBookingCreatedEventData } from '../../events/BookingEvents';
 import { IBookService } from '../../ports/IUseCases';
-import { IBookingDTO, ICreateBookingRequestDTO } from '../../dtos/BookingDTO';
+import { IBookingDTO, ICreateBookingRequestDTO } from '../../dtos/IBookingDTO';
 import { AppMapper } from '../../mappers/AppMapper';
 
 /**
@@ -17,10 +17,10 @@ import { AppMapper } from '../../mappers/AppMapper';
  */
 export class BookService implements IBookService {
   constructor(
-    private bookingRepository: IBookingRepository,
-    private serviceRepository: IServiceRepository,
-    private userRepository: IUserRepository,
-    private eventBus: IEventBus
+    private _bookingRepository: IBookingRepository,
+    private _serviceRepository: IServiceRepository,
+    private _userRepository: IUserRepository,
+    private _eventBus: IEventBus
   ) {}
 
   async execute({ userId, serviceId, startDate, endDate }: ICreateBookingRequestDTO): Promise<IBookingDTO> {
@@ -36,17 +36,30 @@ export class BookService implements IBookService {
     }
 
     const [user, service] = await Promise.all([
-      this.userRepository.findById(userId),
-      this.serviceRepository.findById(serviceId),
+      this._userRepository.findById(userId),
+      this._serviceRepository.findById(serviceId),
     ]);
 
     if (!user) throw new NotFoundError('User not found');
     if (!service) throw new NotFoundError('Service not found');
 
+    // ── Concurrency Guard ────────────────────────────────────────────────────
+    // Check for any confirmed bookings whose date range overlaps the requested
+    // window BEFORE creating a new one.  Two simultaneous requests can still
+    // both pass this check in theory, but the sparse index below (models.ts)
+    // acts as the final atomic database-level guard.
+    const overlapping = await this._bookingRepository.findOverlapping(serviceId, start, end);
+    if (overlapping.length > 0) {
+      throw new ConflictError(
+        'This service is already booked for the selected dates. Please choose different dates.'
+      );
+    }
+    // ────────────────────────────────────────────────────────────────────────
+
     // Price calculation in Domain Entity
     const totalPrice = Booking.calculateTotalPrice(start, end, service.pricePerDay);
 
-    const booking = await this.bookingRepository.save({
+    const booking = await this._bookingRepository.save({
       userId,
       serviceId,
       startDate: start,
@@ -61,7 +74,7 @@ export class BookService implements IBookService {
       service,
     };
     
-    this.eventBus.emit(BOOKING_EVENTS.CREATED, eventData);
+    this._eventBus.emit(BOOKING_EVENTS.CREATED, eventData);
 
     return AppMapper.toBookingDTO(booking);
   }

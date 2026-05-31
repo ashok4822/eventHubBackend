@@ -1,6 +1,6 @@
 import { IServiceDocument } from '../database/models';
-import { IServiceRepository, IServiceFilters } from '../../application/ports/ServiceRepository';
-import { IQueryOptions } from '../../application/ports/QueryOptions';
+import { IServiceRepository, IServiceFilters } from '../../application/ports/IServiceRepository';
+import { IQueryOptions } from '../../application/ports/IQueryOptions';
 import { IService } from '../../domain/entities/Service';
 import { BaseRepository } from './BaseRepository';
 /**

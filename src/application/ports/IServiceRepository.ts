@@ -1,6 +1,6 @@
 import { IService } from '../../domain/entities/Service';
-import { IQueryOptions } from './QueryOptions';
-import { IBaseRepository } from './BaseRepository';
+import { IQueryOptions } from './IQueryOptions';
+import { IBaseRepository } from './IBaseRepository';
 
 export interface IServiceFilters {
   category?: string;

@@ -1,9 +1,9 @@
 import { IPasswordHasher } from '../../ports/IPasswordHasher';
 import { ITokenService } from '../../ports/ITokenService';
-import { IUserRepository } from '../../ports/UserRepository';
+import { IUserRepository } from '../../ports/IUserRepository';
 import { UnauthorizedError } from '../../errors/AppErrors';
 import { ILoginUser } from '../../ports/IUseCases';
-import { IAuthResponseDTO } from '../../dtos/UserDTO';
+import { IAuthResponseDTO } from '../../dtos/IUserDTO';
 import { AppMapper } from '../../mappers/AppMapper';
 
 /**
@@ -11,9 +11,9 @@ import { AppMapper } from '../../mappers/AppMapper';
  */
 export class LoginUser implements ILoginUser {
   constructor(
-    private userRepository: IUserRepository,
-    private passwordHasher: IPasswordHasher,
-    private tokenService: ITokenService
+    private _userRepository: IUserRepository,
+    private _passwordHasher: IPasswordHasher,
+    private _tokenService: ITokenService
   ) {}
 
   async execute({ email, password }: Parameters<ILoginUser['execute']>[0]): Promise<IAuthResponseDTO> {
@@ -21,18 +21,18 @@ export class LoginUser implements ILoginUser {
       throw new Error('Email and password are required');
     }
 
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this._userRepository.findByEmail(email);
     if (!user || !user.id) {
       throw new UnauthorizedError('Invalid credentials');
     }
 
-    const isMatch = await this.passwordHasher.compare(password, user.password);
+    const isMatch = await this._passwordHasher.compare(password, user.password);
     if (!isMatch) {
       throw new UnauthorizedError('Invalid credentials');
     }
 
-    const accessToken = this.tokenService.generateAccessToken({ id: user.id, role: user.role });
-    const refreshToken = this.tokenService.generateRefreshToken({ id: user.id });
+    const accessToken = this._tokenService.generateAccessToken({ id: user.id, role: user.role });
+    const refreshToken = this._tokenService.generateRefreshToken({ id: user.id });
 
     return {
       accessToken,

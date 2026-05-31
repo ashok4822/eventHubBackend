@@ -64,6 +64,17 @@ export const errorMiddleware = (
     });
   }
 
+  // Handle MongoDB duplicate key errors (e.g., two concurrent booking inserts
+  // that both slip past the application-layer overlap check and hit the unique
+  // compound index on { serviceId, startDate, endDate }).
+  if ((err as NodeJS.ErrnoException & { code?: number }).code === 11000) {
+    return res.status(STATUS_CODES.CONFLICT).json({
+      success: false,
+      error: 'ConflictError',
+      message: 'This service is already booked for the selected dates. Please choose different dates.',
+    });
+  }
+
   // Default to 500 Internal Server Error
   const statusCode = STATUS_CODES.INTERNAL_SERVER_ERROR;
   res.status(statusCode).json({
@@ -74,3 +85,4 @@ export const errorMiddleware = (
       : err.message,
   });
 };
+

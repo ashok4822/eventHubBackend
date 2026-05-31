@@ -7,14 +7,14 @@ const AppMapper_1 = require("../../mappers/AppMapper");
  * Use case for adding a new service.
  */
 class AddService {
-    constructor(serviceRepository) {
-        this.serviceRepository = serviceRepository;
+    constructor(_serviceRepository) {
+        this._serviceRepository = _serviceRepository;
     }
     async execute(serviceData) {
         if (serviceData.pricePerDay <= 0) {
             throw new AppErrors_1.BadRequestError('Price per day must be a positive number');
         }
-        const service = await this.serviceRepository.save(serviceData);
+        const service = await this._serviceRepository.save(serviceData);
         return AppMapper_1.AppMapper.toServiceDTO(service);
     }
 }

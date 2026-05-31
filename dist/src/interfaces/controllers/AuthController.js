@@ -8,17 +8,17 @@ const messages_1 = require("../constants/messages");
  * Controller for user authentication and authorization.
  */
 class AuthController {
-    constructor(registerUseCase, loginUseCase, refreshTokenUseCase, requestPasswordResetUseCase, resetPasswordUseCase, config) {
-        this.registerUseCase = registerUseCase;
-        this.loginUseCase = loginUseCase;
-        this.refreshTokenUseCase = refreshTokenUseCase;
-        this.requestPasswordResetUseCase = requestPasswordResetUseCase;
-        this.resetPasswordUseCase = resetPasswordUseCase;
-        this.config = config;
+    constructor(_registerUseCase, _loginUseCase, _refreshTokenUseCase, _requestPasswordResetUseCase, _resetPasswordUseCase, _config) {
+        this._registerUseCase = _registerUseCase;
+        this._loginUseCase = _loginUseCase;
+        this._refreshTokenUseCase = _refreshTokenUseCase;
+        this._requestPasswordResetUseCase = _requestPasswordResetUseCase;
+        this._resetPasswordUseCase = _resetPasswordUseCase;
+        this._config = _config;
     }
     async register(req, res, _next) {
         const { name, email, password, role } = req.body;
-        const user = await this.registerUseCase.execute({ name, email, password, role });
+        const user = await this._registerUseCase.execute({ name, email, password, role });
         res.status(statusCodes_1.STATUS_CODES.CREATED).json({
             success: true,
             message: messages_1.MESSAGES.AUTH.REGISTERED,
@@ -27,9 +27,9 @@ class AuthController {
     }
     async login(req, res, _next) {
         const { email, password } = req.body;
-        const { accessToken, refreshToken, user } = await this.loginUseCase.execute({ email, password });
+        const { accessToken, refreshToken, user } = await this._loginUseCase.execute({ email, password });
         if (refreshToken) {
-            res.cookie('refreshToken', refreshToken, this.config);
+            res.cookie('refreshToken', refreshToken, this._config);
         }
         res.json({
             success: true,
@@ -42,7 +42,7 @@ class AuthController {
         if (!refreshToken) {
             throw new AppErrors_1.UnauthorizedError(messages_1.MESSAGES.AUTH.REFRESH_TOKEN_MISSING);
         }
-        const { accessToken } = await this.refreshTokenUseCase.execute(refreshToken);
+        const { accessToken } = await this._refreshTokenUseCase.execute(refreshToken);
         res.json({
             success: true,
             data: { accessToken }
@@ -50,9 +50,9 @@ class AuthController {
     }
     async logout(req, res) {
         res.clearCookie('refreshToken', {
-            httpOnly: this.config.httpOnly,
-            secure: this.config.secure,
-            sameSite: this.config.sameSite,
+            httpOnly: this._config.httpOnly,
+            secure: this._config.secure,
+            sameSite: this._config.sameSite,
         });
         res.json({
             success: true,
@@ -61,7 +61,7 @@ class AuthController {
     }
     async forgotPassword(req, res) {
         const { email } = req.body;
-        await this.requestPasswordResetUseCase.execute(email);
+        await this._requestPasswordResetUseCase.execute(email);
         res.json({
             success: true,
             message: 'If an account exists with that email, a password reset link has been sent.'
@@ -70,7 +70,7 @@ class AuthController {
     async resetPassword(req, res) {
         const { token } = req.params;
         const { password } = req.body;
-        await this.resetPasswordUseCase.execute(token, password);
+        await this._resetPasswordUseCase.execute(token, password);
         res.json({
             success: true,
             message: 'Password has been reset successfully.'

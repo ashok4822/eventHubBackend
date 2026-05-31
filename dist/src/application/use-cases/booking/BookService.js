@@ -15,11 +15,11 @@ const AppMapper_1 = require("../../mappers/AppMapper");
  * - Uses Domain Entity for business validation (Domain Richness).
  */
 class BookService {
-    constructor(bookingRepository, serviceRepository, userRepository, eventBus) {
-        this.bookingRepository = bookingRepository;
-        this.serviceRepository = serviceRepository;
-        this.userRepository = userRepository;
-        this.eventBus = eventBus;
+    constructor(_bookingRepository, _serviceRepository, _userRepository, _eventBus) {
+        this._bookingRepository = _bookingRepository;
+        this._serviceRepository = _serviceRepository;
+        this._userRepository = _userRepository;
+        this._eventBus = _eventBus;
     }
     async execute({ userId, serviceId, startDate, endDate }) {
         const start = new Date(startDate);
@@ -33,16 +33,26 @@ class BookService {
             throw new AppErrors_1.BadRequestError(message);
         }
         const [user, service] = await Promise.all([
-            this.userRepository.findById(userId),
-            this.serviceRepository.findById(serviceId),
+            this._userRepository.findById(userId),
+            this._serviceRepository.findById(serviceId),
         ]);
         if (!user)
             throw new AppErrors_1.NotFoundError('User not found');
         if (!service)
             throw new AppErrors_1.NotFoundError('Service not found');
+        // ── Concurrency Guard ────────────────────────────────────────────────────
+        // Check for any confirmed bookings whose date range overlaps the requested
+        // window BEFORE creating a new one.  Two simultaneous requests can still
+        // both pass this check in theory, but the sparse index below (models.ts)
+        // acts as the final atomic database-level guard.
+        const overlapping = await this._bookingRepository.findOverlapping(serviceId, start, end);
+        if (overlapping.length > 0) {
+            throw new AppErrors_1.ConflictError('This service is already booked for the selected dates. Please choose different dates.');
+        }
+        // ────────────────────────────────────────────────────────────────────────
         // Price calculation in Domain Entity
         const totalPrice = Booking_1.default.calculateTotalPrice(start, end, service.pricePerDay);
-        const booking = await this.bookingRepository.save({
+        const booking = await this._bookingRepository.save({
             userId,
             serviceId,
             startDate: start,
@@ -55,7 +65,7 @@ class BookService {
             user,
             service,
         };
-        this.eventBus.emit(BookingEvents_1.BOOKING_EVENTS.CREATED, eventData);
+        this._eventBus.emit(BookingEvents_1.BOOKING_EVENTS.CREATED, eventData);
         return AppMapper_1.AppMapper.toBookingDTO(booking);
     }
 }

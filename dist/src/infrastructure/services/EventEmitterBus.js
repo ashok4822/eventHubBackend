@@ -8,13 +8,13 @@ const events_1 = require("events");
  */
 class EventEmitterBus {
     constructor() {
-        this.emitter = new events_1.EventEmitter();
+        this._emitter = new events_1.EventEmitter();
     }
     emit(eventName, data) {
-        this.emitter.emit(eventName, data);
+        this._emitter.emit(eventName, data);
     }
     on(eventName, handler) {
-        this.emitter.on(eventName, handler);
+        this._emitter.on(eventName, handler);
     }
 }
 exports.EventEmitterBus = EventEmitterBus;

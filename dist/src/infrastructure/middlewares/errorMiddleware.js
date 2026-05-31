@@ -51,6 +51,16 @@ const errorMiddleware = (err, req, res, _next) => {
             message: messages_1.MESSAGES.AUTH.TOKEN_EXPIRED,
         });
     }
+    // Handle MongoDB duplicate key errors (e.g., two concurrent booking inserts
+    // that both slip past the application-layer overlap check and hit the unique
+    // compound index on { serviceId, startDate, endDate }).
+    if (err.code === 11000) {
+        return res.status(statusCodes_1.STATUS_CODES.CONFLICT).json({
+            success: false,
+            error: 'ConflictError',
+            message: 'This service is already booked for the selected dates. Please choose different dates.',
+        });
+    }
     // Default to 500 Internal Server Error
     const statusCode = statusCodes_1.STATUS_CODES.INTERNAL_SERVER_ERROR;
     res.status(statusCode).json({

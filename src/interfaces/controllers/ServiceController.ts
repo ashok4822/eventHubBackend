@@ -1,4 +1,4 @@
-import { IHttpRequest, IHttpResponse, HttpNext } from '../types/HttpTypes';
+import { IHttpRequest, IHttpResponse, HttpNext } from '../types/IHttpTypes';
 import { BadRequestError } from '../../application/errors/AppErrors';
 import { STATUS_CODES } from '../constants/statusCodes';
 import { MESSAGES } from '../constants/messages';
@@ -9,15 +9,15 @@ import { IAddService, IEditService, IDeleteService, IGetAllServices } from '../.
  */
 export class ServiceController {
   constructor(
-    private addServiceUseCase: IAddService,
-    private editServiceUseCase: IEditService,
-    private deleteServiceUseCase: IDeleteService,
-    private getAllServicesUseCase: IGetAllServices
+    private _addServiceUseCase: IAddService,
+    private _editServiceUseCase: IEditService,
+    private _deleteServiceUseCase: IDeleteService,
+    private _getAllServicesUseCase: IGetAllServices
   ) {}
 
   async addService(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const { title, description, pricePerDay, location, contactDetails, category, availabilityDates } = req.body;
-    const service = await this.addServiceUseCase.execute({ 
+    const service = await this._addServiceUseCase.execute({ 
       title, description, pricePerDay, location, contactDetails, category, availabilityDates 
     });
     res.status(STATUS_CODES.CREATED).json({
@@ -29,7 +29,7 @@ export class ServiceController {
   async editService(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
     const { id } = req.params;
     const { title, description, pricePerDay, location, contactDetails, category, availabilityDates } = req.body;
-    const service = await this.editServiceUseCase.execute(id as string, { 
+    const service = await this._editServiceUseCase.execute(id as string, { 
       title, description, pricePerDay, location, contactDetails, category, availabilityDates 
     });
     res.json({
@@ -39,7 +39,7 @@ export class ServiceController {
   }
 
   async deleteService(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
-    const success = await this.deleteServiceUseCase.execute(req.params.id as string);
+    const success = await this._deleteServiceUseCase.execute(req.params.id as string);
     if (success) {
       res.json({
         success: true,
@@ -51,7 +51,7 @@ export class ServiceController {
   }
 
   async getAllServices(req: IHttpRequest, res: IHttpResponse, _next: HttpNext): Promise<void> {
-    const services = await this.getAllServicesUseCase.execute(req.query);
+    const services = await this._getAllServicesUseCase.execute(req.query);
     res.json({
       success: true,
       data: services

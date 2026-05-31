@@ -9,15 +9,15 @@ const crypto_1 = __importDefault(require("crypto"));
  * Use case for requesting a password reset.
  */
 class RequestPasswordReset {
-    constructor(userRepository, emailService) {
-        this.userRepository = userRepository;
-        this.emailService = emailService;
+    constructor(_userRepository, _emailService) {
+        this._userRepository = _userRepository;
+        this._emailService = _emailService;
     }
     async execute(email) {
         if (!email) {
             throw new Error('Email is required');
         }
-        const user = await this.userRepository.findByEmail(email);
+        const user = await this._userRepository.findByEmail(email);
         if (!user) {
             // We don't want to reveal if a user exists or not for security reasons
             // but in this case we just return.
@@ -27,8 +27,8 @@ class RequestPasswordReset {
         const resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
         user.resetPasswordToken = resetToken;
         user.resetPasswordExpires = resetPasswordExpires;
-        await this.userRepository.save(user);
-        await this.emailService.sendPasswordResetEmail(user, resetToken);
+        await this._userRepository.save(user);
+        await this._emailService.sendPasswordResetEmail(user, resetToken);
     }
 }
 exports.RequestPasswordReset = RequestPasswordReset;

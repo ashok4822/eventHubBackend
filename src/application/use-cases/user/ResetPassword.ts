@@ -1,4 +1,4 @@
-import { IUserRepository } from '../../ports/UserRepository';
+import { IUserRepository } from '../../ports/IUserRepository';
 import { IPasswordHasher } from '../../ports/IPasswordHasher';
 import { IResetPassword } from '../../ports/IUseCases';
 import { BadRequestError } from '../../errors/AppErrors';
@@ -8,8 +8,8 @@ import { BadRequestError } from '../../errors/AppErrors';
  */
 export class ResetPassword implements IResetPassword {
   constructor(
-    private userRepository: IUserRepository,
-    private passwordHasher: IPasswordHasher
+    private _userRepository: IUserRepository,
+    private _passwordHasher: IPasswordHasher
   ) {}
 
   async execute(token: string, password: string): Promise<void> {
@@ -17,15 +17,15 @@ export class ResetPassword implements IResetPassword {
       throw new BadRequestError('Token and password are required');
     }
 
-    const user = await this.userRepository.findByResetToken(token);
+    const user = await this._userRepository.findByResetToken(token);
     if (!user) {
       throw new BadRequestError('Invalid or expired reset token');
     }
 
-    user.password = await this.passwordHasher.hash(password);
+    user.password = await this._passwordHasher.hash(password);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
 
-    await this.userRepository.save(user);
+    await this._userRepository.save(user);
   }
 }

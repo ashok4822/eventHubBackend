@@ -7,7 +7,7 @@ import { UnauthorizedError, ForbiddenError } from '../../application/errors/AppE
  * Follows DIP by depending on TokenService port.
  */
 export class AuthMiddleware {
-  constructor(private tokenService: ITokenService) {}
+  constructor(private _tokenService: ITokenService) {}
 
   /**
    * Protects routes by verifying the JWT access token.
@@ -18,7 +18,7 @@ export class AuthMiddleware {
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       try {
         token = req.headers.authorization.split(' ')[1];
-        const decoded = this.tokenService.verifyAccessToken(token);
+        const decoded = this._tokenService.verifyAccessToken(token);
         
         req.user = {
           id: decoded.id,

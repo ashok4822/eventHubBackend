@@ -5,11 +5,11 @@ exports.DeleteService = void 0;
  * Use case for deleting a service.
  */
 class DeleteService {
-    constructor(serviceRepository) {
-        this.serviceRepository = serviceRepository;
+    constructor(_serviceRepository) {
+        this._serviceRepository = _serviceRepository;
     }
     async execute(id) {
-        return await this.serviceRepository.delete(id);
+        return await this._serviceRepository.delete(id);
     }
 }
 exports.DeleteService = DeleteService;

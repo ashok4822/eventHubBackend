@@ -1,5 +1,5 @@
-import { IUserRepository } from '../../ports/UserRepository';
-import { IEmailService } from '../../ports/EmailService';
+import { IUserRepository } from '../../ports/IUserRepository';
+import { IEmailService } from '../../ports/IEmailService';
 import { IRequestPasswordReset } from '../../ports/IUseCases';
 import crypto from 'crypto';
 
@@ -8,8 +8,8 @@ import crypto from 'crypto';
  */
 export class RequestPasswordReset implements IRequestPasswordReset {
   constructor(
-    private userRepository: IUserRepository,
-    private emailService: IEmailService
+    private _userRepository: IUserRepository,
+    private _emailService: IEmailService
   ) {}
 
   async execute(email: string): Promise<void> {
@@ -17,7 +17,7 @@ export class RequestPasswordReset implements IRequestPasswordReset {
       throw new Error('Email is required');
     }
 
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this._userRepository.findByEmail(email);
     if (!user) {
       // We don't want to reveal if a user exists or not for security reasons
       // but in this case we just return.
@@ -30,8 +30,8 @@ export class RequestPasswordReset implements IRequestPasswordReset {
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = resetPasswordExpires;
 
-    await this.userRepository.save(user);
+    await this._userRepository.save(user);
 
-    await this.emailService.sendPasswordResetEmail(user, resetToken);
+    await this._emailService.sendPasswordResetEmail(user, resetToken);
   }
 }

@@ -1,8 +1,8 @@
 import { IPasswordHasher } from '../../ports/IPasswordHasher';
-import { IUserRepository } from '../../ports/UserRepository';
+import { IUserRepository } from '../../ports/IUserRepository';
 import { ConflictError } from '../../errors/AppErrors';
 import { IRegisterUser } from '../../ports/IUseCases';
-import { IUserDTO } from '../../dtos/UserDTO';
+import { IUserDTO } from '../../dtos/IUserDTO';
 import { AppMapper } from '../../mappers/AppMapper';
 
 /**
@@ -10,18 +10,18 @@ import { AppMapper } from '../../mappers/AppMapper';
  */
 export class RegisterUser implements IRegisterUser {
   constructor(
-    private userRepository: IUserRepository,
-    private passwordHasher: IPasswordHasher
+    private _userRepository: IUserRepository,
+    private _passwordHasher: IPasswordHasher
   ) {}
 
   async execute({ name, email, password, role }: Parameters<IRegisterUser['execute']>[0]): Promise<IUserDTO> {
-    const existingUser = await this.userRepository.findByEmail(email);
+    const existingUser = await this._userRepository.findByEmail(email);
     if (existingUser) {
       throw new ConflictError('User already exists');
     }
 
-    const hashedPassword = await this.passwordHasher.hash(password);
-    const newUser = await this.userRepository.save({
+    const hashedPassword = await this._passwordHasher.hash(password);
+    const newUser = await this._userRepository.save({
       name,
       email,
       password: hashedPassword,

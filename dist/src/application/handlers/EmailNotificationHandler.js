@@ -7,26 +7,26 @@ const BookingEvents_1 = require("../events/BookingEvents");
  * This decouples the core booking logic from the notification system.
  */
 class EmailNotificationHandler {
-    constructor(emailService, eventBus, logger) {
-        this.emailService = emailService;
-        this.eventBus = eventBus;
-        this.logger = logger;
+    constructor(_emailService, _eventBus, _logger) {
+        this._emailService = _emailService;
+        this._eventBus = _eventBus;
+        this._logger = _logger;
     }
     /**
      * Starts listening for events.
      */
     listen() {
-        this.eventBus.on(BookingEvents_1.BOOKING_EVENTS.CREATED, (data) => {
-            this.handleBookingCreated(data);
+        this._eventBus.on(BookingEvents_1.BOOKING_EVENTS.CREATED, (data) => {
+            this._handleBookingCreated(data);
         });
     }
-    async handleBookingCreated(data) {
+    async _handleBookingCreated(data) {
         try {
-            this.logger.info(`Sending confirmation email for booking ${data.booking.id}`);
-            await this.emailService.sendBookingConfirmation(data.user, data.service, data.booking);
+            this._logger.info(`Sending confirmation email for booking ${data.booking.id}`);
+            await this._emailService.sendBookingConfirmation(data.user, data.service, data.booking);
         }
         catch (error) {
-            this.logger.error('Failed to send booking confirmation email via handler', error);
+            this._logger.error('Failed to send booking confirmation email via handler', error);
         }
     }
 }

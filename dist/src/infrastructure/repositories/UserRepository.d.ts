@@ -1,5 +1,5 @@
 import { IUserDocument } from '../database/models';
-import { IUserRepository } from '../../application/ports/UserRepository';
+import { IUserRepository } from '../../application/ports/IUserRepository';
 import { IUser } from '../../domain/entities/User';
 import { BaseRepository } from './BaseRepository';
 /**

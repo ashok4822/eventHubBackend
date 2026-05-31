@@ -1,10 +1,10 @@
 
 import { IService } from '../../domain/entities/Service';
-import { IServiceFilters } from './ServiceRepository';
-import { IQueryOptions } from './QueryOptions';
-import { IUserDTO, IAuthResponseDTO } from '../dtos/UserDTO';
-import { IServiceDTO, ICreateServiceRequestDTO } from '../dtos/ServiceDTO';
-import { IBookingDTO, ICreateBookingRequestDTO } from '../dtos/BookingDTO';
+import { IServiceFilters } from './IServiceRepository';
+import { IQueryOptions } from './IQueryOptions';
+import { IUserDTO, IAuthResponseDTO } from '../dtos/IUserDTO';
+import { IServiceDTO, ICreateServiceRequestDTO } from '../dtos/IServiceDTO';
+import { IBookingDTO, ICreateBookingRequestDTO } from '../dtos/IBookingDTO';
 
 // User Use Cases
 export interface IRegisterUser {

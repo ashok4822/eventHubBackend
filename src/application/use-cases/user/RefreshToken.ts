@@ -1,5 +1,5 @@
 import { ITokenService } from '../../ports/ITokenService';
-import { IUserRepository } from '../../ports/UserRepository';
+import { IUserRepository } from '../../ports/IUserRepository';
 import { NotFoundError } from '../../errors/AppErrors';
 
 import { IRefreshToken } from '../../ports/IUseCases';
@@ -9,8 +9,8 @@ import { IRefreshToken } from '../../ports/IUseCases';
  */
 export class RefreshToken implements IRefreshToken {
   constructor(
-    private userRepository: IUserRepository,
-    private tokenService: ITokenService
+    private _userRepository: IUserRepository,
+    private _tokenService: ITokenService
   ) {}
 
   async execute(refreshToken: string): Promise<{ accessToken: string }> {
@@ -18,15 +18,15 @@ export class RefreshToken implements IRefreshToken {
       throw new Error('Refresh token is required');
     }
 
-    const decoded = this.tokenService.verifyRefreshToken(refreshToken);
+    const decoded = this._tokenService.verifyRefreshToken(refreshToken);
     
-    const user = await this.userRepository.findById(decoded.id);
+    const user = await this._userRepository.findById(decoded.id);
 
     if (!user || !user.id) {
       throw new NotFoundError('User not found');
     }
 
-    const accessToken = this.tokenService.generateAccessToken({
+    const accessToken = this._tokenService.generateAccessToken({
       id: user.id,
       role: user.role,
     });

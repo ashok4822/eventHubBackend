@@ -10,22 +10,22 @@ const ITokenService_1 = require("../../application/ports/ITokenService");
  * Concrete implementation of TokenService using jsonwebtoken.
  */
 class JwtTokenService extends ITokenService_1.ITokenService {
-    constructor(accessSecret, refreshSecret) {
+    constructor(_accessSecret, _refreshSecret) {
         super();
-        this.accessSecret = accessSecret;
-        this.refreshSecret = refreshSecret;
+        this._accessSecret = _accessSecret;
+        this._refreshSecret = _refreshSecret;
     }
     generateAccessToken(payload) {
-        return jsonwebtoken_1.default.sign(payload, this.accessSecret, { expiresIn: '15m' });
+        return jsonwebtoken_1.default.sign(payload, this._accessSecret, { expiresIn: '15m' });
     }
     generateRefreshToken(payload) {
-        return jsonwebtoken_1.default.sign(payload, this.refreshSecret, { expiresIn: '7d' });
+        return jsonwebtoken_1.default.sign(payload, this._refreshSecret, { expiresIn: '7d' });
     }
     verifyAccessToken(token) {
-        return jsonwebtoken_1.default.verify(token, this.accessSecret);
+        return jsonwebtoken_1.default.verify(token, this._accessSecret);
     }
     verifyRefreshToken(token) {
-        return jsonwebtoken_1.default.verify(token, this.refreshSecret);
+        return jsonwebtoken_1.default.verify(token, this._refreshSecret);
     }
 }
 exports.JwtTokenService = JwtTokenService;

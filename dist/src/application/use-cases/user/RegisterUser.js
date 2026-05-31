@@ -7,17 +7,17 @@ const AppMapper_1 = require("../../mappers/AppMapper");
  * Use case for registering a new user.
  */
 class RegisterUser {
-    constructor(userRepository, passwordHasher) {
-        this.userRepository = userRepository;
-        this.passwordHasher = passwordHasher;
+    constructor(_userRepository, _passwordHasher) {
+        this._userRepository = _userRepository;
+        this._passwordHasher = _passwordHasher;
     }
     async execute({ name, email, password, role }) {
-        const existingUser = await this.userRepository.findByEmail(email);
+        const existingUser = await this._userRepository.findByEmail(email);
         if (existingUser) {
             throw new AppErrors_1.ConflictError('User already exists');
         }
-        const hashedPassword = await this.passwordHasher.hash(password);
-        const newUser = await this.userRepository.save({
+        const hashedPassword = await this._passwordHasher.hash(password);
+        const newUser = await this._userRepository.save({
             name,
             email,
             password: hashedPassword,

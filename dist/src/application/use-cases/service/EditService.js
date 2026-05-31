@@ -7,14 +7,14 @@ const AppMapper_1 = require("../../mappers/AppMapper");
  * Use case for editing an existing service.
  */
 class EditService {
-    constructor(serviceRepository) {
-        this.serviceRepository = serviceRepository;
+    constructor(_serviceRepository) {
+        this._serviceRepository = _serviceRepository;
     }
     async execute(id, serviceData) {
         if (serviceData.pricePerDay !== undefined && serviceData.pricePerDay <= 0) {
             throw new AppErrors_1.BadRequestError("Price per day must be a positive number");
         }
-        const service = await this.serviceRepository.update(id, serviceData);
+        const service = await this._serviceRepository.update(id, serviceData);
         return service ? AppMapper_1.AppMapper.toServiceDTO(service) : null;
     }
 }

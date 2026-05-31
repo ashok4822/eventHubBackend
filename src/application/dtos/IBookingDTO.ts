@@ -1,6 +1,6 @@
 import { BookingStatus } from '../../domain/entities/Booking';
-import { IUserDTO } from './UserDTO';
-import { IServiceDTO } from './ServiceDTO';
+import { IUserDTO } from './IUserDTO';
+import { IServiceDTO } from './IServiceDTO';
 
 export interface IBookingDTO {
   id: string;

@@ -6,15 +6,15 @@ const statusCodes_1 = require("../constants/statusCodes");
  * Controller for managing service bookings.
  */
 class BookingController {
-    constructor(bookServiceUseCase, getUserBookingsUseCase, getAdminBookingsUseCase) {
-        this.bookServiceUseCase = bookServiceUseCase;
-        this.getUserBookingsUseCase = getUserBookingsUseCase;
-        this.getAdminBookingsUseCase = getAdminBookingsUseCase;
+    constructor(_bookServiceUseCase, _getUserBookingsUseCase, _getAdminBookingsUseCase) {
+        this._bookServiceUseCase = _bookServiceUseCase;
+        this._getUserBookingsUseCase = _getUserBookingsUseCase;
+        this._getAdminBookingsUseCase = _getAdminBookingsUseCase;
     }
     async book(req, res, _next) {
         const { serviceId, startDate, endDate } = req.body;
         const userId = req.user.id;
-        const booking = await this.bookServiceUseCase.execute({
+        const booking = await this._bookServiceUseCase.execute({
             userId,
             serviceId,
             startDate,
@@ -26,14 +26,14 @@ class BookingController {
         });
     }
     async getUserBookings(req, res, _next) {
-        const bookings = await this.getUserBookingsUseCase.execute(req.user.id);
+        const bookings = await this._getUserBookingsUseCase.execute(req.user.id);
         res.json({
             success: true,
             data: bookings
         });
     }
     async getAllBookings(req, res, _next) {
-        const bookings = await this.getAdminBookingsUseCase.execute();
+        const bookings = await this._getAdminBookingsUseCase.execute();
         res.json({
             success: true,
             data: bookings

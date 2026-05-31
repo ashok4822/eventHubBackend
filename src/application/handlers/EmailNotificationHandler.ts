@@ -1,5 +1,5 @@
-import { IEmailService } from '../ports/EmailService';
-import { IEventBus } from '../ports/EventBus';
+import { IEmailService } from '../ports/IEmailService';
+import { IEventBus } from '../ports/IEventBus';
 import { BOOKING_EVENTS, IBookingCreatedEventData } from '../events/BookingEvents';
 import { ILogger } from '../ports/ILogger';
 
@@ -9,26 +9,26 @@ import { ILogger } from '../ports/ILogger';
  */
 export class EmailNotificationHandler {
   constructor(
-    private emailService: IEmailService,
-    private eventBus: IEventBus,
-    private logger: ILogger
+    private _emailService: IEmailService,
+    private _eventBus: IEventBus,
+    private _logger: ILogger
   ) {}
 
   /**
    * Starts listening for events.
    */
   public listen(): void {
-    this.eventBus.on(BOOKING_EVENTS.CREATED, (data: unknown) => {
-      this.handleBookingCreated(data as IBookingCreatedEventData);
+    this._eventBus.on(BOOKING_EVENTS.CREATED, (data: unknown) => {
+      this._handleBookingCreated(data as IBookingCreatedEventData);
     });
   }
 
-  private async handleBookingCreated(data: IBookingCreatedEventData): Promise<void> {
+  private async _handleBookingCreated(data: IBookingCreatedEventData): Promise<void> {
     try {
-      this.logger.info(`Sending confirmation email for booking ${data.booking.id}`);
-      await this.emailService.sendBookingConfirmation(data.user, data.service, data.booking);
+      this._logger.info(`Sending confirmation email for booking ${data.booking.id}`);
+      await this._emailService.sendBookingConfirmation(data.user, data.service, data.booking);
     } catch (error) {
-      this.logger.error('Failed to send booking confirmation email via handler', error);
+      this._logger.error('Failed to send booking confirmation email via handler', error);
     }
   }
 }

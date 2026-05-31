@@ -79,6 +79,17 @@ const bookingSchema = new Schema<IBookingDocument>(
   { timestamps: true }
 );
 
+/**
+ * Compound index to prevent duplicate confirmed bookings for the same service
+ * and exact date range.  This is the final atomic guard against race conditions
+ * when two requests pass the application-layer overlap check simultaneously.
+ * Only applies to 'confirmed' bookings (sparse: true allows multiple cancelled ones).
+ */
+bookingSchema.index(
+  { serviceId: 1, startDate: 1, endDate: 1 },
+  { unique: true, partialFilterExpression: { status: 'confirmed' } }
+);
+
 // ---- Models ----
 export const UserModel = mongoose.model<IUserDocument>('User', userSchema);
 export const ServiceModel = mongoose.model<IServiceDocument>('Service', serviceSchema);

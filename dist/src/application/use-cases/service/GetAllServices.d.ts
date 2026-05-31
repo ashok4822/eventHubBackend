@@ -1,13 +1,13 @@
-import { IServiceRepository, IServiceFilters } from '../../ports/ServiceRepository';
-import { IQueryOptions } from '../../ports/QueryOptions';
+import { IServiceRepository, IServiceFilters } from '../../ports/IServiceRepository';
+import { IQueryOptions } from '../../ports/IQueryOptions';
 import { IGetAllServices } from '../../ports/IUseCases';
-import { IServiceDTO } from '../../dtos/ServiceDTO';
+import { IServiceDTO } from '../../dtos/IServiceDTO';
 /**
  * Use case for retrieving all services.
  */
 export declare class GetAllServices implements IGetAllServices {
-    private serviceRepository;
-    constructor(serviceRepository: IServiceRepository);
+    private _serviceRepository;
+    constructor(_serviceRepository: IServiceRepository);
     execute(query: IQueryOptions & IServiceFilters): Promise<{
         services: IServiceDTO[];
         totalCount: number;

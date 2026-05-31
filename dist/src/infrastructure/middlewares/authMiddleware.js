@@ -7,8 +7,8 @@ const AppErrors_1 = require("../../application/errors/AppErrors");
  * Follows DIP by depending on TokenService port.
  */
 class AuthMiddleware {
-    constructor(tokenService) {
-        this.tokenService = tokenService;
+    constructor(_tokenService) {
+        this._tokenService = _tokenService;
         /**
          * Protects routes by verifying the JWT access token.
          */
@@ -17,7 +17,7 @@ class AuthMiddleware {
             if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
                 try {
                     token = req.headers.authorization.split(' ')[1];
-                    const decoded = this.tokenService.verifyAccessToken(token);
+                    const decoded = this._tokenService.verifyAccessToken(token);
                     req.user = {
                         id: decoded.id,
                         role: decoded.role,
